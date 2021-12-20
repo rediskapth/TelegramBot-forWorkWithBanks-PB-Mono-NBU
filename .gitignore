@@ -2,3 +2,4 @@
 *.iml
 /out
 /telegramBot/src/main/java/api/config
+*.properties
