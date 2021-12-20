@@ -1,4 +1,4 @@
 .idea
 *.iml
 /out
-/config
+/telegramBot/src/main/java/api/config/TelegramConfig.java
