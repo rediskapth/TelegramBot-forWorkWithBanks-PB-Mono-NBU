@@ -14,6 +14,12 @@
         <artifactId>spring-beans</artifactId>
         <version>5.3.13</version>
     </dependency>
+    <dependency>
+        <groupId>org.telegram</groupId>
+        <artifactId>telegrambots</artifactId>
+        <version>5.5.0</version>
+    </dependency>
+</dependencies>
     <build>
         <plugins>
             <plugin>
@@ -28,13 +34,7 @@
     </build>
 
 
-    <dependencies>
-        <dependency>
-            <groupId>org.telegram</groupId>
-            <artifactId>telegrambots</artifactId>
-            <version>5.5.0</version>
-        </dependency>
-    </dependencies>
-</dependencies>
+
+
 
 </project>

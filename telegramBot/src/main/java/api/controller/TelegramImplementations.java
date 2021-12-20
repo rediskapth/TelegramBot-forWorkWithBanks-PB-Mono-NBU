@@ -1,5 +1,6 @@
 package api.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -7,20 +8,23 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import utils.keyboards.InlineKeyboardMarkupMy;
 
-import static api.config.TelegramConfig.BOT_NAME;
-import static api.config.TelegramConfig.BOT_TOKEN;
+
 
 public class TelegramImplementations extends TelegramLongPollingBot {
+    @Value("${bot.username}")
+    private String username;
 
-
+    @Value("${bot.token}")
+    private String token;
+    @Override
     public String getBotUsername() {
-        return BOT_NAME;
+        return username;
     }
-
+    @Override
     public String getBotToken() {
-        return BOT_TOKEN;
+        return token;
     }
-
+    @Override
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
             pressingTheButton(update);
