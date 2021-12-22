@@ -1,6 +1,5 @@
 package api.bank;
 
-import api.bank.ObjectAllBank;
 import api.bank.objects.PrivatObject;
 import com.google.gson.Gson;
 
@@ -14,9 +13,9 @@ import java.util.ArrayList;
 public class PrivatAPI {
     private final HttpClient client = HttpClient.newHttpClient();
     private final Gson GSON = new Gson();
-    ArrayList<ObjectAllBank> responses = new ArrayList<>();
+    ArrayList<BankResponce> responses = new ArrayList<>();
 
-    public ArrayList<ObjectAllBank> getCurrencyfromBank() throws IOException, InterruptedException {
+    public ArrayList<BankResponce> getCurrencyfromBank() throws IOException, InterruptedException {
         HttpRequest build = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5"))
                 .GET()
@@ -28,12 +27,12 @@ public class PrivatAPI {
                 responses.clear();
         for (PrivatObject pb : privat) {
             if ((pb.getCcy().equals("USD") && pb.getBase_ccy().equals("UAH")) || (pb.getCcy().equals("EUR") && pb.getBase_ccy().equals("UAH")) || (pb.getCcy().equals("RUR") && pb.getBase_ccy().equals("UAH"))) {
-                ObjectAllBank objectAllBank = new ObjectAllBank();
-                objectAllBank.setBank("PrivatBank");
-                objectAllBank.setBuy(pb.getBuy());
-                objectAllBank.setSale(pb.getSale());
-                objectAllBank.setCurrency(getCurrencyNameByName( pb.getCcy()));
-                responses.add(objectAllBank);
+                BankResponce bankResponce = new BankResponce();
+                bankResponce.setBank("PrivatBank");
+                bankResponce.setBuy(pb.getBuy());
+                bankResponce.setSale(pb.getSale());
+                bankResponce.setCurrency(getCurrencyNameByName( pb.getCcy()));
+                responses.add(bankResponce);
             }
         }
         return responses;
