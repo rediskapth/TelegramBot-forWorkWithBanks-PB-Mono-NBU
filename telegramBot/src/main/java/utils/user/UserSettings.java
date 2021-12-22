@@ -6,11 +6,11 @@ public class UserSettings {
     private Long userID;
     private String name;
     private List<Banks> bankList;
-    private List<CurNames> currencies;
+    private List<Currencies> currencies;
     private int roundAccuracy;
     private int notifyHour;
 
-    public UserSettings(String name, List<Banks> bankList, List<CurNames> currencies, int roundAccuracy, int notifyHour) {
+    public UserSettings(String name, List<Banks> bankList, List<Currencies> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
         this.bankList = bankList;
         this.currencies = currencies;
@@ -34,11 +34,11 @@ public class UserSettings {
         this.bankList = bankList;
     }
 
-    public List<CurNames> getCurrencies() {
+    public List<Currencies> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<CurNames> currencies) {
+    public void setCurrencies(List<Currencies> currencies) {
         this.currencies = currencies;
     }
 
