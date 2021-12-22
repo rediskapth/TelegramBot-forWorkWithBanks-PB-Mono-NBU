@@ -1,6 +1,6 @@
 package api.bank;
 
-public class ObjectAllBank {
+public class BankResponce {
     private String bank;
     private String currency;
     private Float buy;

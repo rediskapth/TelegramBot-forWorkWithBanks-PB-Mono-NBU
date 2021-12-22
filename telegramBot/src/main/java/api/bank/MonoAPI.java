@@ -1,6 +1,5 @@
 package api.bank;
 
-import api.bank.ObjectAllBank;
 import api.bank.objects.MonoObject;
 import com.google.gson.Gson;
 
@@ -14,8 +13,8 @@ import java.util.ArrayList;
 public class MonoAPI {
     private final HttpClient client = HttpClient.newHttpClient();
     private final Gson GSON = new Gson();
-                    ArrayList<ObjectAllBank> responses = new ArrayList<>();
-    public ArrayList<ObjectAllBank> getCurrencyfromBank() throws IOException, InterruptedException {
+                    ArrayList<BankResponce> responses = new ArrayList<>();
+    public ArrayList<BankResponce> getCurrencyfromBank() throws IOException, InterruptedException {
         HttpRequest build = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.monobank.ua/bank/currency"))
                 .GET()
@@ -26,12 +25,12 @@ public class MonoAPI {
 
         for (MonoObject mb : mono) {
             if ((mb.getCurrencyCodeA() == 840 && mb.getCurrencyCodeB() == 980)||(mb.getCurrencyCodeA() == 978 && mb.getCurrencyCodeB() == 980)||(mb.getCurrencyCodeA() == 643 && mb.getCurrencyCodeB() == 980)){
-                ObjectAllBank objectAllBank=new ObjectAllBank();
-                objectAllBank.setBank("МоноБанк");
-                objectAllBank.setBuy(mb.getRateBuy());
-                objectAllBank.setSale(mb.getRateSell());
-                objectAllBank.setCurrency(getCurrencyNameByCode(mb.getCurrencyCodeA()));
-                responses.add(objectAllBank);
+                BankResponce bankResponce =new BankResponce();
+                bankResponce.setBank("МоноБанк");
+                bankResponce.setBuy(mb.getRateBuy());
+                bankResponce.setSale(mb.getRateSell());
+                bankResponce.setCurrency(getCurrencyNameByCode(mb.getCurrencyCodeA()));
+                responses.add(bankResponce);
             }
         }
         return responses;
