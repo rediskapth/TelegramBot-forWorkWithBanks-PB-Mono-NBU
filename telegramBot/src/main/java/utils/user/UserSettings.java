@@ -3,15 +3,13 @@ package utils.user;
 import java.util.List;
 
 public class UserSettings {
-    private Long userID;
     private String name;
     private List<Banks> bankList;
     private List<Currencies> currencies;
     private int roundAccuracy;
     private int notifyHour;
 
-    public UserSettings(Long userID, String name, List<Banks> bankList, List<Currencies> currencies, int roundAccuracy, int notifyHour) {
-        this.userID = userID;
+    public UserSettings(String name, List<Banks> bankList, List<Currencies> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
         this.bankList = bankList;
         this.currencies = currencies;
