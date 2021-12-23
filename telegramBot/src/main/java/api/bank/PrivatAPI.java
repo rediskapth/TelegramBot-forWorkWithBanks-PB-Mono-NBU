@@ -25,7 +25,7 @@ public class PrivatAPI {
         HttpResponse<String> send = client.send(build, HttpResponse.BodyHandlers.ofString());
         PrivatObject[] privat = GSON.fromJson(send.body(), PrivatObject[].class);
 
-
+                responses.clear();
         for (PrivatObject pb : privat) {
             if ((pb.getCcy().equals("USD") && pb.getBase_ccy().equals("UAH")) || (pb.getCcy().equals("EUR") && pb.getBase_ccy().equals("UAH")) || (pb.getCcy().equals("RUR") && pb.getBase_ccy().equals("UAH"))) {
                 ObjectAllBank objectAllBank = new ObjectAllBank();

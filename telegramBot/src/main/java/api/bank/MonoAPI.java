@@ -23,7 +23,7 @@ public class MonoAPI {
                 .build();
         HttpResponse<String> send = client.send(build, HttpResponse.BodyHandlers.ofString());
         MonoObject[] mono = GSON.fromJson(send.body(), MonoObject[].class);
-
+            responses.clear();
         for (MonoObject mb : mono) {
             if ((mb.getCurrencyCodeA() == 840 && mb.getCurrencyCodeB() == 980)||(mb.getCurrencyCodeA() == 978 && mb.getCurrencyCodeB() == 980)||(mb.getCurrencyCodeA() == 643 && mb.getCurrencyCodeB() == 980)){
                 ObjectAllBank objectAllBank=new ObjectAllBank();

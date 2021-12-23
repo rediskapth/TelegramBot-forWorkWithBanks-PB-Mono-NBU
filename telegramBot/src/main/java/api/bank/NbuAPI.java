@@ -25,7 +25,7 @@ public class NbuAPI {
         HttpResponse<String> send = client.send(build, HttpResponse.BodyHandlers.ofString());
         NbuObject[] nbu = GSON.fromJson(send.body(), NbuObject[].class);
 
-
+            responses.clear();
         for (NbuObject NBU : nbu) {
             if ((NBU.getCc().equals("USD")) || (NBU.getCc().equals("EUR")) || (NBU.getCc().equals("RUB"))) {
                 ObjectAllBank objectAllBank = new ObjectAllBank();
