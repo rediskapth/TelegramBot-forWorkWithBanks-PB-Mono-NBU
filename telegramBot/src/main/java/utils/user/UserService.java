@@ -19,13 +19,13 @@ public class UserService {
     }
 
     //Get element of Map with user settings
-    public UserSettings getUserSettings(Long userId){
+    public UserSettings getUserSettings(Long userId) {
         return userList.get(userId);
     }
 
     //Add or change Map element with user settings
-    public void setUserSettings(Long userId, UserSettings userSettings){
-        if (userList.containsKey(userId)){
+    public void setUserSettings(Long userId, UserSettings userSettings) {
+        if (userList.containsKey(userId)) {
             userList.replace(userId, userSettings);
         } else {
             userList.put(userId, userSettings);
