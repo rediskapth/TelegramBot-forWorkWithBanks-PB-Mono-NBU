@@ -1,6 +1,5 @@
 package api.bank;
 
-import api.bank.ObjectAllBank;
 import api.bank.objects.NbuObject;
 import com.google.gson.Gson;
 
@@ -14,9 +13,9 @@ import java.util.ArrayList;
 public class NbuAPI {
     private final HttpClient client = HttpClient.newHttpClient();
     private final Gson GSON = new Gson();
-    ArrayList<ObjectAllBank> responses = new ArrayList<>();
+    ArrayList<BankResponce> responses = new ArrayList<>();
 
-    public ArrayList<ObjectAllBank> getCurrencyfromBank() throws IOException, InterruptedException {
+    public ArrayList<BankResponce> getCurrencyfromBank() throws IOException, InterruptedException {
         HttpRequest build = HttpRequest.newBuilder()
                 .uri(URI.create("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json"))
                 .GET()
@@ -28,12 +27,12 @@ public class NbuAPI {
             responses.clear();
         for (NbuObject NBU : nbu) {
             if ((NBU.getCc().equals("USD")) || (NBU.getCc().equals("EUR")) || (NBU.getCc().equals("RUB"))) {
-                ObjectAllBank objectAllBank = new ObjectAllBank();
-                objectAllBank.setBank("NBU");
-                objectAllBank.setBuy(NBU.getRate());
-                objectAllBank.setSale(NBU.getRate());
-                objectAllBank.setCurrency(NBU.getCc());
-                responses.add(objectAllBank);
+                BankResponce bankResponce = new BankResponce();
+                bankResponce.setBank("NBU");
+                bankResponce.setBuy(NBU.getRate());
+                bankResponce.setSale(NBU.getRate());
+                bankResponce.setCurrency(NBU.getCc());
+                responses.add(bankResponce);
             }
         }
         return responses;
