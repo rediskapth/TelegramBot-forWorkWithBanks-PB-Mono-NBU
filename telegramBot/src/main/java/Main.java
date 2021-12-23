@@ -19,7 +19,15 @@ public class Main {
         } catch (TelegramApiException e) {
             e.getStackTrace();
         }
-
+//        MonoAPI monoAPI=new MonoAPI();
+//        NbuAPI nbuAPI=new NbuAPI();
+//        PrivatAPI privatAPI=new PrivatAPI();
+//        try {
+//            System.out.println(monoAPI.getCurrencyfromBank());
+//            System.out.println(nbuAPI.getCurrencyfromBank());
+//            System.out.println(privatAPI.getCurrencyfromBank());
+//
+//
 
 
     }

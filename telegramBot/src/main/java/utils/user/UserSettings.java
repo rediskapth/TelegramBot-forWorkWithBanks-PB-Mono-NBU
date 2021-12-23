@@ -1,15 +1,18 @@
 package utils.user;
 
+import api.bank.Banks;
+import api.bank.CurrencyNames;
+
 import java.util.List;
 
 public class UserSettings {
     private String name;
     private List<Banks> bankList;
-    private List<Currencies> currencies;
+    private List<CurrencyNames> currencies;
     private int roundAccuracy;
     private int notifyHour;
 
-    public UserSettings(String name, List<Banks> bankList, List<Currencies> currencies, int roundAccuracy, int notifyHour) {
+    public UserSettings(String name, List<Banks> bankList, List<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
         this.bankList = bankList;
         this.currencies = currencies;
@@ -33,11 +36,11 @@ public class UserSettings {
         this.bankList = bankList;
     }
 
-    public List<Currencies> getCurrencies() {
+    public List<CurrencyNames> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<Currencies> currencies) {
+    public void setCurrencies(List<CurrencyNames> currencies) {
         this.currencies = currencies;
     }
 
