@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             telegramBotsApi.registerBot(new TelegramImplementations());
@@ -22,13 +22,13 @@ public class Main {
 //        MonoAPI monoAPI=new MonoAPI();
 //        NbuAPI nbuAPI=new NbuAPI();
 //        PrivatAPI privatAPI=new PrivatAPI();
-//        try {
+        //try {
 //            System.out.println(monoAPI.getCurrencyfromBank());
 //            System.out.println(nbuAPI.getCurrencyfromBank());
 //            System.out.println(privatAPI.getCurrencyfromBank());
 //
 //
-
+//        }
 
     }
 
