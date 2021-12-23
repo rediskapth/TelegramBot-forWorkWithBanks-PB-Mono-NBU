@@ -1,26 +1,36 @@
 package api.controller;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import utils.keyboards.InlineKeyboardMarkupMy;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Properties;
+
 
 public class TelegramImplementations extends TelegramLongPollingBot {
-    @Value("${bot.username}")
-    private String username;
 
-    @Value("${bot.token}")
-    private String token;
+        String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("application.properties")).getPath();
+        Properties appProps=new Properties();
+    public String getName(String a)  {
+        try {
+            appProps.load(new FileInputStream(rootPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return appProps.getProperty(a);
+    }
 
-    @Override
+        @Override
     public String getBotUsername() {
-        return username;
+                return getName("bot.username");
     }
 
     @Override
     public String getBotToken() {
-        return token;
+                 return getName("bot.token");
     }
 
     @Override
