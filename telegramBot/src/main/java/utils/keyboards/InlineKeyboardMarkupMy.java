@@ -56,7 +56,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
                     .callbackData("Time_of_notification")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Назад.")
+                    .text("Назад")
                     .callbackData("Back")
                     .build())));
 
@@ -94,7 +94,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             executeAsync(
                     SendMessage.builder()
                             .chatId(chatUserId)
-                            .text("Кол-во знаков после запятой.")
+                            .text("Кол-во знаков после запятой")
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
         } catch (TelegramApiException e) {

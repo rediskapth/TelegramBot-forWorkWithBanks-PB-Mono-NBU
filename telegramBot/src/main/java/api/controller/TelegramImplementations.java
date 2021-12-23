@@ -1,8 +1,12 @@
 package api.controller;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import utils.keyboards.InlineKeyboardMarkupMy;
+import utils.keyboards.ReplyKeyboardMarkupMy;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,6 +15,8 @@ import java.util.Properties;
 
 
 public class TelegramImplementations extends TelegramLongPollingBot {
+     static    ReplyKeyboardMarkupMy replyKeyboardMarkupMy=new ReplyKeyboardMarkupMy();
+      static   InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
 
         String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("application.properties")).getPath();
         Properties appProps=new Properties();
@@ -53,12 +59,25 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 
             if (text.equals("/start")) {
                 inlineKeyboardMarkupMy.mainMenu(chatUserId);
+            }else if (update.getMessage().getText().matches(".+:00") || update.getMessage().getText().equals("Выключить уведомления")) {
+                inlineKeyboardMarkupMy.menuSettings(chatUserId);
+                ReplyKeyboardRemove keyboardMarkup = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
+                try {
+                    executeAsync(
+                            SendMessage.builder()
+                                    .text(update.getMessage().getText())
+                                    .chatId(chatUserId)
+                                    .replyMarkup(keyboardMarkup)
+                                    .build());
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
+
+                }
             }
         }
     }
 
     private void pressingTheButton(Update update) {
-        InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
         String data = update.getCallbackQuery().getData();
         String chatUserId = update.getCallbackQuery().getMessage().getChatId().toString();
         switch (data) {
@@ -70,6 +89,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             case "BackB" -> inlineKeyboardMarkupMy.menuSettings(chatUserId);
             case "currencies" -> inlineKeyboardMarkupMy.menuCurrency(chatUserId);
             case "BackVal" -> inlineKeyboardMarkupMy.menuSettings(chatUserId);
+            case"Time_of_notification"->replyKeyboardMarkupMy.getKeyboardMarkup(chatUserId);
         }
     }
 
