@@ -10,9 +10,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class UserService {
-    private static Map<Long, UserSettings> userList;
+    private ConcurrentMap<Long, UserSettings> userList;
     private static final String USERDATA_FILE_NAME = "users.json";
 
     public UserService() {
@@ -41,7 +42,7 @@ public class UserService {
         }
     }
 
-    public static void readUsersFromFile() {
+    public void readUsersFromFile() {
         File usersFile = new File(USERDATA_FILE_NAME);
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(usersFile))) {
@@ -54,7 +55,7 @@ public class UserService {
         }
     }
 
-    public static void saveUsersToFile() {
+    public void saveUsersToFile() {
         Gson json = new GsonBuilder().setPrettyPrinting().create();
         File file = new File(USERDATA_FILE_NAME);
 
