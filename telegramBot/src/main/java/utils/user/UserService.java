@@ -1,26 +1,35 @@
 package utils.user;
 
+import api.bank.Banks;
+import api.bank.CurrencyNames;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserService {
     private static Map<Long, UserSettings> userList;
     private static final String USERDATA_FILE_NAME = "users.json";
 
-    private UserService() {
+    public UserService() {
         userList = new ConcurrentHashMap<>();
     }
+    private static final UserSettings defaultSettings = new UserSettings("NoName",
+            Arrays.asList(Banks.valueOf("PRIVATBANK")),
+            Arrays.asList(CurrencyNames.valueOf("USD")), 2, 9);
+
 
     //Get element of Map with user settings
     public UserSettings getUserSettings(Long userId) {
-        return userList.get(userId);
+        UserSettings settings = userList.get(userId);
+        if (settings == null) {
+            return defaultSettings;
+        }
+        return settings;
     }
 
     //Add or change Map element with user settings
