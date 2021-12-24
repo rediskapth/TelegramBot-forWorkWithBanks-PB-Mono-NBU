@@ -4,11 +4,12 @@ import api.bank.Banks;
 import api.bank.CurrencyNames;
 
 import java.util.List;
+import java.util.Set;
 
 public class UserSettings {
     private String name;
-    private List<Banks> bankList;
-    private List<CurrencyNames> currencies;
+    private Set<Banks> bankList;
+    private Set<CurrencyNames> currencies;
     private int roundAccuracy;
     private int notifyHour;
 
@@ -16,7 +17,7 @@ public class UserSettings {
 
     };
 
-    public UserSettings(String name, List<Banks> bankList, List<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
+    public UserSettings(String name, Set<Banks> bankList, Set<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
         this.bankList = bankList;
         this.currencies = currencies;
@@ -32,19 +33,19 @@ public class UserSettings {
         this.name = name;
     }
 
-    public List<Banks> getBankList() {
+    public Set<Banks> getBankList() {
         return bankList;
     }
 
-    public void setBankList(List<Banks> bankList) {
+    public void setBankList(Set<Banks> bankList) {
         this.bankList = bankList;
     }
 
-    public List<CurrencyNames> getCurrencies() {
+    public Set<CurrencyNames> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(List<CurrencyNames> currencies) {
+    public void setCurrencies(Set<CurrencyNames> currencies) {
         this.currencies = currencies;
     }
 
