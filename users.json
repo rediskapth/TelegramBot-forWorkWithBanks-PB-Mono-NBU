@@ -1,0 +1,13 @@
+{
+  "530943899": {
+    "name": "Paul",
+    "bankList": [
+      "PRIVATBANK"
+    ],
+    "currencies": [
+      "USD"
+    ],
+    "roundAccuracy": 2,
+    "notifyHour": 9
+  }
+}

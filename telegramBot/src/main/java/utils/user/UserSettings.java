@@ -12,6 +12,10 @@ public class UserSettings {
     private int roundAccuracy;
     private int notifyHour;
 
+    public UserSettings(){
+
+    };
+
     public UserSettings(String name, List<Banks> bankList, List<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
         this.bankList = bankList;

@@ -1,6 +1,8 @@
 package utils.keyboards;
 
 
+import api.bank.Banks;
+import api.bank.CurrencyNames;
 import api.controller.TelegramImplementations;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,11 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class InlineKeyboardMarkupMy extends TelegramImplementations {
-    public void mainMenu(String chatUserId) {
+    public void mainMenu(String userId) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Получить информацию")
+                    .text("Получить инфо")
                     .callbackData("Get")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
@@ -26,7 +28,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             executeAsync(
                     SendMessage.builder()
                             .text("Привет. Этот бот поможет отслеживать актуальные курсы валют.")
-                            .chatId(chatUserId)
+                            .chatId(userId)
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
         } catch (TelegramApiException e) {
@@ -52,7 +54,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
                     .callbackData("currencies")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Время оповещений.")
+                    .text("Время оповещений")
                     .callbackData("Time_of_notification")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
@@ -75,15 +77,15 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Два знака")
+                    .text("0.00")
                     .callbackData("2")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Три знака")
+                    .text("0.000")
                     .callbackData("3")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Четыре знака")
+                    .text("0.0000")
                     .callbackData("4")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
@@ -94,7 +96,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             executeAsync(
                     SendMessage.builder()
                             .chatId(chatUserId)
-                            .text("Кол-во знаков после запятой.")
+                            .text("Кол-во знаков после запятой")
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
         } catch (TelegramApiException e) {
@@ -105,18 +107,12 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
     public void menuBanks(String chatUserId) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Приват банк")
-                    .callbackData("Privat")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("НБУ")
-                    .callbackData("NBU")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Моно банк")
-                    .callbackData("Mono")
-                    .build())));
+            for (Banks bankName : Banks.values()) {
+                buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                        .text(bankName.getValue())
+                        .callbackData(bankName.getValue())
+                        .build())));
+            }
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Назад")
                     .callbackData("BackB")
@@ -136,18 +132,12 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
     public void menuCurrency(String chatUserId) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Доллар")
-                    .callbackData("USA")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Евро")
-                    .callbackData("EUR")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Рубль")
-                    .callbackData("RUB")
-                    .build())));
+            for (CurrencyNames currencyNames : CurrencyNames.values()) {
+                buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                        .text(currencyNames.getValue())
+                        .callbackData(currencyNames.getValue())
+                        .build())));
+            }
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Назад")
                     .callbackData("BackVal")

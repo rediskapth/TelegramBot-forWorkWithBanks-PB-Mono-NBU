@@ -19,10 +19,14 @@ public class UserService {
     public UserService() {
         userList = new ConcurrentHashMap<>();
     }
+
     private static final UserSettings defaultSettings = new UserSettings("NoName",
             Arrays.asList(Banks.valueOf("PRIVATBANK")),
             Arrays.asList(CurrencyNames.valueOf("USD")), 2, 9);
 
+    public Boolean isUserExists(Long userId){
+        return userList.containsKey(userId);
+    }
 
     //Get element of Map with user settings
     public UserSettings getUserSettings(Long userId) {
@@ -40,6 +44,7 @@ public class UserService {
         } else {
             userList.put(userId, userSettings);
         }
+        saveUsersToFile();
     }
 
     public void readUsersFromFile() {
