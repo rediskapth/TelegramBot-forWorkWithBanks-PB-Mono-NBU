@@ -21,8 +21,8 @@ public class UserService {
     }
 
     private static final UserSettings defaultSettings = new UserSettings("NoName",
-            Set.of (Banks.PRIVATBANK),
-            Set.of (CurrencyNames.USD), 2, 9);
+            new HashSet<Banks> (Arrays.asList(Banks.PRIVATBANK)),
+            new HashSet<CurrencyNames>(Arrays.asList(CurrencyNames.USD)), 2, 9);
 
     public Boolean isUserExists(Long userId){
         return userList.containsKey(userId);
@@ -30,14 +30,14 @@ public class UserService {
 
     //Записываем банк в настройки пользователя, если его нет, то добавляется/если есть то не дублируется
     public void setBank (Long userId, String bank){
-        Set<Banks> banks = userList.get(userId).getBankList();
+        HashSet<Banks> banks = userList.get(userId).getBankList();
         banks.add(Banks.valueOf(bank));
         userList.get(userId).setBankList(banks);
     }
 
     //Записываем валюту в настройки пользователя, если ее нет, то добавляется/если есть то не дублируется
     public void setCurrency (Long userId, String currency){
-        Set<CurrencyNames> currencies = userList.get(userId).getCurrencies();
+        HashSet<CurrencyNames> currencies = userList.get(userId).getCurrencies();
         currencies.add(CurrencyNames.valueOf(currency));
         userList.get(userId).setCurrencies(currencies);
     }

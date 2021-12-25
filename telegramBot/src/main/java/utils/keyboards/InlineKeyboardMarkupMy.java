@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class InlineKeyboardMarkupMy extends TelegramImplementations {
     public void mainMenu(String userId) {
@@ -129,13 +130,21 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
         }
     }
 
-    public void menuCurrency(String chatUserId) {
+    public void menuCurrency(Long ChatId, Set<CurrencyNames> checkedCurrencies) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             for (CurrencyNames currencyNames : CurrencyNames.values()) {
+                String checked="";
+                for (CurrencyNames cur : checkedCurrencies){
+                    if (currencyNames.getName()==cur.getName()){
+                        checked = " V";
+                    } else {
+                        checked ="";
+                    }
+                }
                 buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                        .text(currencyNames.getValue())
-                        .callbackData(currencyNames.getValue())
+                        .text(currencyNames.getName()+checked)
+                        .callbackData(currencyNames.getCommand())
                         .build())));
             }
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
@@ -145,7 +154,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
 
             executeAsync(
                     SendMessage.builder()
-                            .chatId(chatUserId)
+                            .chatId(ChatId.toString())
                             .text("Валюта")
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());

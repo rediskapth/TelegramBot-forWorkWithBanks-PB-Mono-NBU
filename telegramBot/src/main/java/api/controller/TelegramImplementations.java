@@ -7,6 +7,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRem
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import utils.keyboards.InlineKeyboardMarkupMy;
 import utils.keyboards.ReplyKeyboardMarkupMy;
+import utils.user.UserService;
+import utils.user.UserSettings;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,12 +17,18 @@ import java.util.Properties;
 
 
 public class TelegramImplementations extends TelegramLongPollingBot {
-     static    ReplyKeyboardMarkupMy replyKeyboardMarkupMy=new ReplyKeyboardMarkupMy();
-      static   InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
+    static ReplyKeyboardMarkupMy replyKeyboardMarkupMy = new ReplyKeyboardMarkupMy();
+    static InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
+    private UserService userList = new UserService();
 
-        String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("application.properties")).getPath();
-        Properties appProps=new Properties();
-    public String getName(String a)  {
+    String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("application.properties")).getPath();
+    Properties appProps = new Properties();
+
+    public TelegramImplementations() {
+
+    }
+
+    public String getName(String a) {
         try {
             appProps.load(new FileInputStream(rootPath));
         } catch (IOException e) {
@@ -29,37 +37,45 @@ public class TelegramImplementations extends TelegramLongPollingBot {
         return appProps.getProperty(a);
     }
 
-        @Override
+    @Override
     public String getBotUsername() {
-                return getName("bot.username");
+        return getName("bot.username");
     }
 
     @Override
     public String getBotToken() {
-                 return getName("bot.token");
+        return getName("bot.token");
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasCallbackQuery()) {
-            pressingTheButton(update);
 
+        if (update.hasCallbackQuery()) {
+            Long userId = update.getCallbackQuery().getMessage().getChatId();
+            if (!userList.isUserExists(userId)) {
+                UserSettings user = userList.getUserSettings(userId);
+                user.setName(update.getCallbackQuery().getMessage().getFrom().getFirstName());
+                userList.setUserSettings(userId, user);
+            }
+            pressingTheButton(update);
         } else if (update.hasMessage()) {
             messageHandler(update);
         }
     }
 
-
     private void messageHandler(Update update) {
         InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
+
+
         if (update.getMessage().hasText()) {
 
             String text = update.getMessage().getText();
             String chatUserId = update.getMessage().getChatId().toString();
 
             if (text.equals("/start")) {
+
                 inlineKeyboardMarkupMy.mainMenu(chatUserId);
-            }else if (update.getMessage().getText().matches(".+:00") || update.getMessage().getText().equals("Выключить уведомления")) {
+            } else if (update.getMessage().getText().matches(".+:00") || update.getMessage().getText().equals("Выключить уведомления")) {
                 inlineKeyboardMarkupMy.menuSettings(chatUserId);
                 ReplyKeyboardRemove keyboardMarkup = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
                 try {
@@ -71,25 +87,28 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                                     .build());
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
-
                 }
             }
         }
+
     }
 
     private void pressingTheButton(Update update) {
         String data = update.getCallbackQuery().getData();
-        String chatUserId = update.getCallbackQuery().getMessage().getChatId().toString();
+        Long userId = update.getCallbackQuery().getMessage().getChatId();
         switch (data) {
-            case "Settings" -> inlineKeyboardMarkupMy.menuSettings(chatUserId);
-            case "Back" -> inlineKeyboardMarkupMy.mainMenu(chatUserId);
-            case "Number" -> inlineKeyboardMarkupMy.menuNumber(chatUserId);
-            case "BackNum" -> inlineKeyboardMarkupMy.menuSettings(chatUserId);
-            case "Bank" -> inlineKeyboardMarkupMy.menuBanks(chatUserId);
-            case "BackB" -> inlineKeyboardMarkupMy.menuSettings(chatUserId);
-            case "currencies" -> inlineKeyboardMarkupMy.menuCurrency(chatUserId);
-            case "BackVal" -> inlineKeyboardMarkupMy.menuSettings(chatUserId);
-            case"Time_of_notification"->replyKeyboardMarkupMy.getKeyboardMarkup(chatUserId);
+            case "Settings" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
+            case "Back" -> inlineKeyboardMarkupMy.mainMenu(userId.toString());
+            case "Number" -> inlineKeyboardMarkupMy.menuNumber(userId.toString());
+            case "BackNum" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
+            case "Bank" -> inlineKeyboardMarkupMy.menuBanks(userId.toString());
+            case "BackB" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
+            case "currencies" -> inlineKeyboardMarkupMy.menuCurrency(userId, userList.getUserSettings(userId).getCurrencies());
+            case "EUR" -> userList.setCurrency(userId, "EUR");
+            case "USD" -> userList.setCurrency(userId, "USD");
+            case "RUR" -> userList.setCurrency(userId, "RUR");
+            case "BackVal" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
+            case "Time_of_notification" -> replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString());
         }
     }
 

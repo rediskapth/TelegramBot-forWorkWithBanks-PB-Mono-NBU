@@ -3,13 +3,14 @@ package utils.user;
 import api.bank.Banks;
 import api.bank.CurrencyNames;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class UserSettings {
     private String name;
-    private Set<Banks> bankList;
-    private Set<CurrencyNames> currencies;
+    private HashSet<Banks> bankList;
+    private HashSet<CurrencyNames> currencies;
     private int roundAccuracy;
     private int notifyHour;
 
@@ -17,7 +18,7 @@ public class UserSettings {
 
     };
 
-    public UserSettings(String name, Set<Banks> bankList, Set<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
+    public UserSettings(String name, HashSet<Banks> bankList, HashSet<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
         this.bankList = bankList;
         this.currencies = currencies;
@@ -33,19 +34,19 @@ public class UserSettings {
         this.name = name;
     }
 
-    public Set<Banks> getBankList() {
+    public HashSet<Banks> getBankList() {
         return bankList;
     }
 
-    public void setBankList(Set<Banks> bankList) {
+    public void setBankList(HashSet<Banks> bankList) {
         this.bankList = bankList;
     }
 
-    public Set<CurrencyNames> getCurrencies() {
+    public HashSet<CurrencyNames> getCurrencies() {
         return currencies;
     }
 
-    public void setCurrencies(Set<CurrencyNames> currencies) {
+    public void setCurrencies(HashSet<CurrencyNames> currencies) {
         this.currencies = currencies;
     }
 
