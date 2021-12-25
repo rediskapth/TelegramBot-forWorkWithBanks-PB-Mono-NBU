@@ -6,7 +6,7 @@ public class MonoObject {
     private int   currencyCodeA;
     private  int currencyCodeB;
     private  int date;
-    private float rateSell=2.5678f;
+    private float rateSell;
     private float rateBuy;
     private float rateCross;
 
