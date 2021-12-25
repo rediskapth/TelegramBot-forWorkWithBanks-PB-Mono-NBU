@@ -2,3 +2,5 @@
 *.iml
 /out
 resources/*.properties
+target/
+r.properties
