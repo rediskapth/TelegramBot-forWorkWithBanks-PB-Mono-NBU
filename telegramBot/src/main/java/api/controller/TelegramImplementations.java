@@ -18,7 +18,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
      static    ReplyKeyboardMarkupMy replyKeyboardMarkupMy=new ReplyKeyboardMarkupMy();
       static   InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
 
-        String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("a.properties")).getPath();
+        String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("r.properties")).getPath();
         Properties appProps=new Properties();
     public String getName(String a)  {
         try {
