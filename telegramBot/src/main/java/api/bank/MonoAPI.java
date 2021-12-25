@@ -27,7 +27,7 @@ public class MonoAPI {
             if ((mb.getCurrencyCodeA() == 840 && mb.getCurrencyCodeB() == 980)||(mb.getCurrencyCodeA() == 978 && mb.getCurrencyCodeB() == 980)||(mb.getCurrencyCodeA() == 643 && mb.getCurrencyCodeB() == 980)){
                 BankResponce bankResponce =new BankResponce();
                 bankResponce.setBank("МоноБанк");
-                bankResponce.setBuy(mb.getRateBuy());
+                bankResponce.setBuy( mb.getRateBuy());
                 bankResponce.setSale(mb.getRateSell());
                 bankResponce.setCurrency(getCurrencyNameByCode(mb.getCurrencyCodeA()));
                 responses.add(bankResponce);
