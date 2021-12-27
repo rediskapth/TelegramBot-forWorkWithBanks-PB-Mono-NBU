@@ -18,6 +18,7 @@ public class UserService {
 
     public UserService() {
         userList = new ConcurrentHashMap<>();
+        readUsersFromFile();
     }
 
     private static final UserSettings defaultSettings = new UserSettings("NoName",
@@ -33,6 +34,15 @@ public class UserService {
         HashSet<Banks> banks = userList.get(userId).getBankList();
         banks.add(Banks.valueOf(bank));
         userList.get(userId).setBankList(banks);
+        saveUsersToFile();
+    }
+
+    //Удаляем банк из настройки пользователя
+    public void unSetBank (Long userId, String bank){
+        HashSet<Banks> banks = userList.get(userId).getBankList();
+        banks.remove(Banks.valueOf(bank));
+        userList.get(userId).setBankList(banks);
+        saveUsersToFile();
     }
 
     //Записываем валюту в настройки пользователя, если ее нет, то добавляется/если есть то не дублируется
@@ -40,15 +50,28 @@ public class UserService {
         HashSet<CurrencyNames> currencies = userList.get(userId).getCurrencies();
         currencies.add(CurrencyNames.valueOf(currency));
         userList.get(userId).setCurrencies(currencies);
+        saveUsersToFile();
     }
+
+    //Удаляем валюту из настроек пользователя
+    public void unSetCurrency (Long userId, String currency){
+        HashSet<CurrencyNames> currencies = userList.get(userId).getCurrencies();
+        currencies.remove(CurrencyNames.valueOf(currency));
+        userList.get(userId).setCurrencies(currencies);
+        System.out.println(userList.get(userId).getCurrencies().toString());
+        saveUsersToFile();
+    }
+
     //Записываем кол-во знаков после запятой в пользователя
     public void  setAccuracy(Long userId, int accuracy){
         userList.get(userId).setRoundAccuracy(accuracy);
+        saveUsersToFile();
     }
 
     //Записываем время оповещения 0- не оповещать
     public void  setNotify(Long userId, int notifyHour){
         userList.get(userId).setNotifyHour(notifyHour);
+        saveUsersToFile();
     }
 
 
@@ -76,7 +99,7 @@ public class UserService {
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(usersFile))) {
             userList = new Gson()
-                    .fromJson(reader, new TypeToken<HashMap<String, UserSettings>>() {
+                    .fromJson(reader, new TypeToken<ConcurrentHashMap<String, UserSettings>>() {
                     }.getType());
             System.out.println(userList);//for check
         } catch (IOException e) {
