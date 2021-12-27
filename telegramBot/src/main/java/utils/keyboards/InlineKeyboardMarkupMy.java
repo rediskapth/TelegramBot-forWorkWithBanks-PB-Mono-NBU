@@ -3,7 +3,7 @@ package utils.keyboards;
 
 import api.bank.Banks;
 import api.bank.CurrencyNames;
-import api.controller.TelegramImplementations;
+import api.controller.TelegramBotController;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.*;
 
-public class InlineKeyboardMarkupMy extends TelegramImplementations {
+public class InlineKeyboardMarkupMy extends TelegramBotController {
     public void mainMenu(String userId) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
@@ -117,7 +117,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             for (CurrencyNames currencyNames : CurrencyNames.values()) {
                 String checked = "";
                 for (CurrencyNames cur : checkedCurrencies) {
-                    if (currencyNames.getName() == cur.getName()) {
+                    if (currencyNames.getName().equals(cur.getName())) {
                         checked = "✅  ";
                         break;
                     } else {
@@ -160,7 +160,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             for (Banks banks : Banks.values()) {
                 String checked = "";
                 for (Banks cur : checkedBanks) {
-                    if (banks.getName() == cur.getName()) {
+                    if (banks.getName().equals(cur.getName())) {
                         checked = "✅  ";
                         break;
                     } else {

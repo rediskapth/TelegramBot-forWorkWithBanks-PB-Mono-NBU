@@ -2,26 +2,19 @@ package utils.user;
 
 import api.bank.Banks;
 import api.bank.CurrencyNames;
-
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class UserSettings {
     private String name;
-    private HashSet<Banks> bankList;
-    private HashSet<CurrencyNames> currencies;
+    private HashSet<Banks> banksHashSet;
+    private HashSet<CurrencyNames> currenciesHashSet;
     private int roundAccuracy;
     private int notifyHour;
 
-    public UserSettings(){
-
-    };
-
     public UserSettings(String name, HashSet<Banks> bankList, HashSet<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;
-        this.bankList = bankList;
-        this.currencies = currencies;
+        this.banksHashSet = bankList;
+        this.currenciesHashSet = currencies;
         this.roundAccuracy = roundAccuracy;
         this.notifyHour = notifyHour;
     }
@@ -34,20 +27,16 @@ public class UserSettings {
         this.name = name;
     }
 
-    public HashSet<Banks> getBankList() {
-        return bankList;
+    public HashSet<Banks> getBanksHashSet() {
+        return banksHashSet;
     }
 
-    public void setBankList(HashSet<Banks> bankList) {
-        this.bankList = bankList;
+    public HashSet<CurrencyNames> getCurrenciesHashSet() {
+        return currenciesHashSet;
     }
 
-    public HashSet<CurrencyNames> getCurrencies() {
-        return currencies;
-    }
-
-    public void setCurrencies(HashSet<CurrencyNames> currencies) {
-        this.currencies = currencies;
+    public void setCurrenciesHashSet(HashSet<CurrencyNames> currenciesHashSet) {
+        this.currenciesHashSet = currenciesHashSet;
     }
 
     public int getRoundAccuracy() {
@@ -64,5 +53,9 @@ public class UserSettings {
 
     public void setNotifyHour(int notifyHour) {
         this.notifyHour = notifyHour;
+    }
+
+    public void setBanksHashSet(HashSet<Banks> banksHashSet) {
+        this.banksHashSet = banksHashSet;
     }
 }

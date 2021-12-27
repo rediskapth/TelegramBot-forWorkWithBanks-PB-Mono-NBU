@@ -1,32 +1,11 @@
 {
-  "392688915": {
-    "name": "AleksakhinAnton",
-    "bankList": [
+  "483177614": {
+    "banksHashSet": [
+      "NBU",
       "PRIVATBANK"
     ],
-    "currencies": [
-      "USD"
-    ],
-    "roundAccuracy": 2,
-    "notifyHour": -1
-  },
-  "765380855": {
-    "name": "ternet1978",
-    "bankList": [
-      "PRIVATBANK"
-    ],
-    "currencies": [
-      "USD"
-    ],
-    "roundAccuracy": 2,
-    "notifyHour": -1
-  },
-  "828642831": {
-    "name": "An2365",
-    "bankList": [
-      "PRIVATBANK"
-    ],
-    "currencies": [
+    "currenciesHashSet": [
+      "RUR",
       "USD"
     ],
     "roundAccuracy": 2,
@@ -34,13 +13,16 @@
   },
   "530943899": {
     "name": "Paultych",
-    "bankList": [
+    "banksHashSet": [
+      "NBU",
       "PRIVATBANK"
     ],
-    "currencies": [
-      "USD"
+    "currenciesHashSet": [
+      "RUR",
+      "USD",
+      "EUR"
     ],
-    "roundAccuracy": 4,
+    "roundAccuracy": 2,
     "notifyHour": -1
   }
 }

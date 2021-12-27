@@ -1,6 +1,6 @@
 package utils.keyboards;
 
-import api.controller.TelegramImplementations;
+import api.controller.TelegramBotController;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReplyKeyboardMarkupMy extends TelegramImplementations {
+public class ReplyKeyboardMarkupMy extends TelegramBotController {
 public void getKeyboardMarkup(String chatUserId){
     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
     replyKeyboardMarkup.setResizeKeyboard(true);
