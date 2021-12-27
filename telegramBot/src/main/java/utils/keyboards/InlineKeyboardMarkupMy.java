@@ -72,38 +72,46 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
         }
     }
 
-    public void menuNumber(String chatUserId) {
+    public void menuNumber(Long userId, boolean isUpdate, int messageId, int accuracy) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("2")
+                    .text(accuracy==2?"✅  2":"2")
                     .callbackData("accuracy:2")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("3")
+                    .text(accuracy==3?"✅  3":"3")
                     .callbackData("accuracy:3")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("4")
+                    .text(accuracy==4?"✅  4":"4")
                     .callbackData("accuracy:4")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Назад")
                     .callbackData("BackNum")
                     .build())));
-
-            executeAsync(
-                    SendMessage.builder()
-                            .chatId(chatUserId)
-                            .text("Кол-во знаков после запятой")
-                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
-                            .build());
+            if (isUpdate) {
+                executeAsync(
+                        EditMessageReplyMarkup.builder()
+                                .chatId(userId.toString())
+                                .messageId(messageId)
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            } else {
+                executeAsync(
+                        SendMessage.builder()
+                                .chatId(userId.toString())
+                                .text("Кол-во знаков после запятой")
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            }
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
-    public void menuCurrency(Long ChatId, boolean isUpdate, int messageId, HashSet<CurrencyNames> checkedCurrencies) {
+    public void menuCurrency(Long userId, boolean isUpdate, int messageId, HashSet<CurrencyNames> checkedCurrencies) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             for (CurrencyNames currencyNames : CurrencyNames.values()) {
@@ -128,14 +136,14 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             if (isUpdate) {
                 executeAsync(
                         EditMessageReplyMarkup.builder()
-                                .chatId(ChatId.toString())
+                                .chatId(userId.toString())
                                 .messageId(messageId)
                                 .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                                 .build());
             } else {
                 executeAsync(
                         SendMessage.builder()
-                                .chatId(ChatId.toString())
+                                .chatId(userId.toString())
                                 .text("Валюта")
                                 .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                                 .build());
@@ -146,7 +154,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
     }
 
 
-    public void menuBanks(Long ChatId, boolean isUpdate, int messageId, HashSet<Banks> checkedBanks) {
+    public void menuBanks(Long userId, boolean isUpdate, int messageId, HashSet<Banks> checkedBanks) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             for (Banks banks : Banks.values()) {
@@ -171,14 +179,14 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             if (isUpdate) {
                 executeAsync(
                         EditMessageReplyMarkup.builder()
-                                .chatId(ChatId.toString())
+                                .chatId(userId.toString())
                                 .messageId(messageId)
                                 .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                                 .build());
             } else {
                 executeAsync(
                         SendMessage.builder()
-                                .chatId(ChatId.toString())
+                                .chatId(userId.toString())
                                 .text("Банки")
                                 .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                                 .build());

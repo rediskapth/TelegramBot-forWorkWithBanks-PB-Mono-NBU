@@ -24,7 +24,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     Properties appProps = new Properties();
 
     public TelegramImplementations() {
-       UserService.getInstance();
+        UserService.getInstance();
     }
 
     public String getName(String a) {
@@ -94,10 +94,19 @@ public class TelegramImplementations extends TelegramLongPollingBot {
         switch (data) {
             case "Settings" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
             case "Back" -> inlineKeyboardMarkupMy.mainMenu(userId.toString());
-            case "Number" -> inlineKeyboardMarkupMy.menuNumber(userId.toString());
-            //case "accuracy:2"->
-            //case "accuracy:3"->
-            //case "accuracy:4"->
+            case "Number" -> inlineKeyboardMarkupMy.menuNumber(userId, false, messageId, userList.getUserSettings(userId).getRoundAccuracy());
+            case "accuracy:2" -> {
+                    userList.getUserSettings(userId).setRoundAccuracy(2);
+                inlineKeyboardMarkupMy.menuNumber(userId, true, messageId, userList.getUserSettings(userId).getRoundAccuracy());
+            }
+            case "accuracy:3" -> {
+                    userList.getUserSettings(userId).setRoundAccuracy(3);
+                inlineKeyboardMarkupMy.menuNumber(userId, true, messageId, userList.getUserSettings(userId).getRoundAccuracy());
+            }
+            case "accuracy:4" -> {
+                    userList.getUserSettings(userId).setRoundAccuracy(4);
+                inlineKeyboardMarkupMy.menuNumber(userId, true, messageId, userList.getUserSettings(userId).getRoundAccuracy());
+            }
             case "BackNum" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
             case "Bank" -> inlineKeyboardMarkupMy.menuBanks(userId, false, messageId, userList.getUserSettings(userId).getBankList());
             case "PRIVATBANK" -> {
@@ -160,6 +169,4 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             case "Time_of_notification" -> replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString());
         }
     }
-
-
 }
