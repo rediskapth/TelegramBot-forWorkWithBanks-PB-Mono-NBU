@@ -65,4 +65,15 @@ public class UserSettings {
     public void setNotifyHour(int notifyHour) {
         this.notifyHour = notifyHour;
     }
+
+    @Override
+    public String toString() {
+        return "UserSettings{" +
+                "name='" + name + '\'' +
+                ", bankList=" + bankList +
+                ", currencies=" + currencies +
+                ", roundAccuracy=" + roundAccuracy +
+                ", notifyHour=" + notifyHour +
+                '}';
+    }
 }

@@ -15,9 +15,9 @@ public class Facade {
 
     public List<BankResponce> getBankInfo(String bankName) throws IOException, InterruptedException {
         return switch (bankName) {
-            case "mono" -> monoApi.getCurrencyfromBank();
-            case "nbu" -> nbuAPI.getCurrencyfromBank();
-            case "private" -> privatAPI.getCurrencyfromBank();
+            case "Монобанк" -> monoApi.getCurrencyfromBank();
+            case "НБУ" -> nbuAPI.getCurrencyfromBank();
+            case "Приватбанк" -> privatAPI.getCurrencyfromBank();
             default -> null;
         };
 

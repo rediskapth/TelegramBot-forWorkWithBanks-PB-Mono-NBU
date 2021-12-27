@@ -1,5 +1,9 @@
 package api.controller;
 
+import api.Facade;
+import api.bank.BankResponce;
+import api.bank.Banks;
+import api.bank.CurrencyNames;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,8 +17,7 @@ import utils.user.UserSettings;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-
-
+import java.util.stream.Collectors;
 
 
 public class TelegramImplementations extends TelegramLongPollingBot {
@@ -112,10 +115,16 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             }
 
             case "GetInfo" -> {
-                execute(SendMessage.builder()
-                        .text("Some cours")
-                        .chatId(userId.toString())
-                        .build());
+                try {
+                    execute(SendMessage.builder()
+                            .text(sendInfo(userService.getUserSettings(userId)))
+                            .chatId(userId.toString())
+                            .build());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 break;
             }
 
@@ -225,5 +234,37 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             case "Time_of_notification" -> {replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString());
                 break;}
         }
+    }
+    public String sendInfo(UserSettings userSettings) throws IOException, InterruptedException {
+        Facade facade = new Facade();
+
+        final HashSet<Banks> bankList = userSettings.getBankList();
+        System.out.println(bankList.toString());
+
+        final HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
+        System.out.println(currencies.toString());
+
+
+        StringBuilder result = new StringBuilder();
+
+        for (Banks banks : bankList) {
+            List<BankResponce> bankInfo = facade.getBankInfo(banks.getName());
+result.append("Курс в: "+banks.getCommand()+"\n");
+
+            for (CurrencyNames currency : currencies) {
+                List<BankResponce> collect = bankInfo.stream()
+                        .filter(cur -> currency.getCommand().equals(cur.getCurrency()))
+                        .collect(Collectors.toList());
+
+
+                for (BankResponce responce : collect) {
+                    result.append( responce.getCurrency() + " Покупка: " + responce.getBuy()+" Продажа:"  + responce.getSale() + "\n");
+                }
+                System.out.println(collect);
+            }
+
+        }
+
+        return result.toString();
     }
 }
