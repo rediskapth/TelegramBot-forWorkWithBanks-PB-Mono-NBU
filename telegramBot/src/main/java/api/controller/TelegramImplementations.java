@@ -24,7 +24,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     Properties appProps = new Properties();
 
     public TelegramImplementations() {
-
+       UserService.getInstance();
     }
 
     public String getName(String a) {
