@@ -53,7 +53,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             Long userId = update.getCallbackQuery().getMessage().getChatId();
             if (!userList.isUserExists(userId)) {
                 UserSettings user = userList.getUserSettings(userId);
-                user.setName(update.getCallbackQuery().getMessage().getFrom().getFirstName());
+                user.setName(update.getCallbackQuery().getMessage().getChat().getUserName());
                 userList.setUserSettings(userId, user);
             }
             pressingTheButton(update);
@@ -64,15 +64,10 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 
     private void messageHandler(Update update) {
         InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
-
-
         if (update.getMessage().hasText()) {
-
             String text = update.getMessage().getText();
             String chatUserId = update.getMessage().getChatId().toString();
-
             if (text.equals("/start")) {
-
                 inlineKeyboardMarkupMy.mainMenu(chatUserId);
             } else if (update.getMessage().getText().matches(".+:00") || update.getMessage().getText().equals("Выключить уведомления")) {
                 inlineKeyboardMarkupMy.menuSettings(chatUserId);
@@ -89,7 +84,6 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 }
             }
         }
-
     }
 
     private void pressingTheButton(Update update) {
