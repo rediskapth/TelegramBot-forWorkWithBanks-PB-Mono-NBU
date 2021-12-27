@@ -1,17 +1,24 @@
 package api.bank;
 
 public enum CurrencyNames {
-    USD("USD"),
-    RUB("RUB"),
-    EUR("EUR");
+    USD("Долар США","USD"),
+    RUR("Рубль","RUR"),
+    EUR("Евро","EUR");
 
-    String value;
+    private final String name;
+    private final String command;
 
-    CurrencyNames(String value) {
-        this.value = value;
+
+    CurrencyNames(String name, String command) {
+        this.name = name;
+        this.command = command;
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
+    public String getCommand() {
+        return command;
+    }
+
 }

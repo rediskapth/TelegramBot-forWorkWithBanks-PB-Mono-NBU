@@ -1,18 +1,24 @@
 package api.bank;
 
 public enum Banks {
-    PRIVATBANK("Приватбанк"),
-    MONOBANK("Монобанк"),
-    NBU("НБУ");
+    PRIVATBANK("Приватбанк","PRIVATBANK"),
+    MONOBANK("Монобанк","MONOBANK"),
+    NBU("НБУ","NBU");
 
-    private final String value;
+    private final String name;
+    private final String command;
 
-    Banks(String value) {
-        this.value = value;
+
+    Banks(String name, String command) {
+        this.name = name;
+        this.command = command;
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
+    }
+    public String getCommand() {
+        return command;
     }
 
 }

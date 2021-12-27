@@ -24,7 +24,7 @@ public class PrivatAPI {
         HttpResponse<String> send = client.send(build, HttpResponse.BodyHandlers.ofString());
         PrivatObject[] privat = GSON.fromJson(send.body(), PrivatObject[].class);
 
-                responses.clear();
+        responses.clear();
         for (PrivatObject pb : privat) {
             if ((pb.getCcy().equals("USD") && pb.getBase_ccy().equals("UAH")) || (pb.getCcy().equals("EUR") && pb.getBase_ccy().equals("UAH")) || (pb.getCcy().equals("RUR") && pb.getBase_ccy().equals("UAH"))) {
                 BankResponce bankResponce = new BankResponce();
@@ -37,12 +37,12 @@ public class PrivatAPI {
         }
         return responses;
     }
-  private String  getCurrencyNameByName(String Ccy){
-      return switch (Ccy) {
-          case "USD" -> "USD";
-          case "EUR" -> "EUR";
-          case "RUR" -> "RUB";
-          default -> null;
-      };
+    private String  getCurrencyNameByName(String Ccy){
+        return switch (Ccy) {
+            case "USD" -> "USD";
+            case "EUR" -> "EUR";
+            case "RUR" -> "RUB";
+            default -> null;
+        };
     }
 }

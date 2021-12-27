@@ -13,48 +13,84 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class UserService {
-    private ConcurrentMap<Long, UserSettings> userList;
+    private ConcurrentMap<Long, UserSettings> userMap;
     private static final String USERDATA_FILE_NAME = "users.json";
+    private static File file = new File(USERDATA_FILE_NAME);
+    private static UserService serviceInstance;
 
     public UserService() {
-        userList = new ConcurrentHashMap<>();
+        userMap = new ConcurrentHashMap<>();
+        readUsersFromFile();
     }
 
-    private static final UserSettings defaultSettings = new UserSettings("NoName",
-            Set.of (Banks.PRIVATBANK),
-            Set.of (CurrencyNames.USD), 2, 9);
+    public static UserService getInstance() {
+        return Objects.requireNonNullElseGet(serviceInstance, UserService::new);
+    }
 
-    public Boolean isUserExists(Long userId){
-        return userList.containsKey(userId);
+    private static UserSettings defaultSettings = new UserSettings("DefUser",
+            new HashSet<>(List.of(Banks.PRIVATBANK)),
+            new HashSet<>(List.of(CurrencyNames.USD)), 2, -1);
+
+    public Boolean isUserExists(Long userId) {
+        return userMap.containsKey(userId);
     }
 
     //Записываем банк в настройки пользователя, если его нет, то добавляется/если есть то не дублируется
-    public void setBank (Long userId, String bank){
-        Set<Banks> banks = userList.get(userId).getBankList();
+    public void setBank(Long userId, String bank) {
+        UserSettings userSettings = userMap.get(userId);
+        HashSet<Banks> banks = userSettings.getBankList();
         banks.add(Banks.valueOf(bank));
-        userList.get(userId).setBankList(banks);
+        userMap.replace(userId, userSettings);
+        saveUsersToFile();
+    }
+
+    //Удаляем банк из настройки пользователя
+    public void unSetBank(Long userId, String bank) {
+        UserSettings userSettings = userMap.get(userId);
+        HashSet<Banks> banks = userSettings.getBankList();
+        banks.remove(Banks.valueOf(bank));
+        userMap.replace(userId, userSettings);
+        saveUsersToFile();
     }
 
     //Записываем валюту в настройки пользователя, если ее нет, то добавляется/если есть то не дублируется
-    public void setCurrency (Long userId, String currency){
-        Set<CurrencyNames> currencies = userList.get(userId).getCurrencies();
+    public void setCurrency(Long userId, String currency) {
+        UserSettings userSettings = userMap.get(userId);
+        HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
         currencies.add(CurrencyNames.valueOf(currency));
-        userList.get(userId).setCurrencies(currencies);
+        userSettings.setCurrencies(currencies);
+        userMap.replace(userId, userSettings);
+        saveUsersToFile();
     }
+
+    //Удаляем валюту из настроек пользователя
+    public void unSetCurrency(Long userId, String currency) {
+        UserSettings userSettings = userMap.get(userId);
+        HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
+        currencies.remove(CurrencyNames.valueOf(currency));
+        userSettings.setCurrencies(currencies);
+        userMap.replace(userId, userSettings);
+        saveUsersToFile();
+    }
+
     //Записываем кол-во знаков после запятой в пользователя
-    public void  setAccuracy(Long userId, int accuracy){
-        userList.get(userId).setRoundAccuracy(accuracy);
+    public void setAccuracy(Long userId, int accuracy) {
+        UserSettings userSettings = userMap.get(userId);
+        userSettings.setRoundAccuracy(accuracy);
+        userMap.put(userId, userSettings);
+        saveUsersToFile();
     }
 
     //Записываем время оповещения 0- не оповещать
-    public void  setNotify(Long userId, int notifyHour){
-        userList.get(userId).setNotifyHour(notifyHour);
+    public void setNotify(Long userId, int notifyHour) {
+        userMap.get(userId).setNotifyHour(notifyHour);
+        saveUsersToFile();
     }
 
 
     //Get element of Map with user settings
     public UserSettings getUserSettings(Long userId) {
-        UserSettings settings = userList.get(userId);
+        UserSettings settings = userMap.get(userId);
         if (settings == null) {
             return defaultSettings;
         }
@@ -63,36 +99,32 @@ public class UserService {
 
     //Add or change Map element with user settings
     public void setUserSettings(Long userId, UserSettings userSettings) {
-        if (userList.containsKey(userId)) {
-            userList.replace(userId, userSettings);
-        } else {
-            userList.put(userId, userSettings);
-        }
+        UserSettings userSettings1 = new UserSettings(userSettings.getName(),userSettings.getBankList(),userSettings.getCurrencies(),userSettings.getRoundAccuracy(),userSettings.getNotifyHour());
+        userMap.put(userId, userSettings1);
         saveUsersToFile();
     }
 
-    public void readUsersFromFile() {
+    private void readUsersFromFile() {
         File usersFile = new File(USERDATA_FILE_NAME);
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(usersFile))) {
-            userList = new Gson()
-                    .fromJson(reader, new TypeToken<HashMap<String, UserSettings>>() {
+            userMap = new Gson()
+                    .fromJson(reader, new TypeToken<ConcurrentHashMap<String, UserSettings>>() {
                     }.getType());
-            System.out.println(userList);//for check
+            System.out.println(userMap);//for check
         } catch (IOException e) {
-            System.out.println(e.getMessage());  //it may not the best way
+            System.out.println("ReaderError: "+e.getMessage());  //it may not the best way
         }
     }
 
     public void saveUsersToFile() {
         Gson json = new GsonBuilder().setPrettyPrinting().create();
-        File file = new File(USERDATA_FILE_NAME);
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(userList, writer);
+            gson.toJson(userMap, writer);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("SaverError: "+e.getMessage());
         }
     }
 }
+
