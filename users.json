@@ -1,6 +1,6 @@
 {
-  "530943899": {
-    "name": "Paul",
+  "392688915": {
+    "name": "AleksakhinAnton",
     "bankList": [
       "PRIVATBANK"
     ],
@@ -8,6 +8,39 @@
       "USD"
     ],
     "roundAccuracy": 2,
-    "notifyHour": 9
+    "notifyHour": -1
+  },
+  "765380855": {
+    "name": "ternet1978",
+    "bankList": [
+      "PRIVATBANK"
+    ],
+    "currencies": [
+      "USD"
+    ],
+    "roundAccuracy": 2,
+    "notifyHour": -1
+  },
+  "828642831": {
+    "name": "An2365",
+    "bankList": [
+      "PRIVATBANK"
+    ],
+    "currencies": [
+      "USD"
+    ],
+    "roundAccuracy": 2,
+    "notifyHour": -1
+  },
+  "530943899": {
+    "name": "Paultych",
+    "bankList": [
+      "PRIVATBANK"
+    ],
+    "currencies": [
+      "USD"
+    ],
+    "roundAccuracy": 4,
+    "notifyHour": -1
   }
 }

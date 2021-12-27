@@ -18,7 +18,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Получить инфо")
-                    .callbackData("Get")
+                    .callbackData("GetInfo")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Настройки")
