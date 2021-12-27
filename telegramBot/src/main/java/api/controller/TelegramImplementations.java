@@ -12,8 +12,7 @@ import utils.user.UserSettings;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 
 public class TelegramImplementations extends TelegramLongPollingBot {
@@ -96,17 +95,73 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     private void pressingTheButton(Update update) {
         String data = update.getCallbackQuery().getData();
         Long userId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
+
         switch (data) {
             case "Settings" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
             case "Back" -> inlineKeyboardMarkupMy.mainMenu(userId.toString());
             case "Number" -> inlineKeyboardMarkupMy.menuNumber(userId.toString());
+            //case "accuracy:2"->
+            //case "accuracy:3"->
+            //case "accuracy:4"->
             case "BackNum" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
-            case "Bank" -> inlineKeyboardMarkupMy.menuBanks(userId.toString());
+            case "Bank" -> inlineKeyboardMarkupMy.menuBanks(userId, false, messageId, userList.getUserSettings(userId).getBankList());
+            case "PRIVATBANK" -> {
+                if (userList.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand() == "PRIVATBANK").count() > 0
+                        && userList.getUserSettings(userId).getBankList().size() > 1) {
+                    userList.unSetBank(userId, "PRIVATBANK");
+                } else {
+                    userList.setBank(userId, "PRIVATBANK");
+                }
+                inlineKeyboardMarkupMy.menuBanks(userId, true, messageId, userList.getUserSettings(userId).getBankList());
+            }
+            case "MONOBANK" -> {
+                if (userList.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand() == "MONOBANK").count() > 0
+                        && userList.getUserSettings(userId).getBankList().size() > 1) {
+                    userList.unSetBank(userId, "MONOBANK");
+                } else {
+                    userList.setBank(userId, "MONOBANK");
+                }
+                inlineKeyboardMarkupMy.menuBanks(userId, true, messageId, userList.getUserSettings(userId).getBankList());
+            }
+            case "NBU" -> {
+                if (userList.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand() == "NBU").count() > 0
+                        && userList.getUserSettings(userId).getBankList().size() > 1) {
+                    userList.unSetBank(userId, "NBU");
+                } else {
+                    userList.setBank(userId, "NBU");
+                }
+                inlineKeyboardMarkupMy.menuBanks(userId, true, messageId, userList.getUserSettings(userId).getBankList());
+            }
             case "BackB" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
-            case "currencies" -> inlineKeyboardMarkupMy.menuCurrency(userId, userList.getUserSettings(userId).getCurrencies());
-            case "EUR" -> userList.setCurrency(userId, "EUR");
-            case "USD" -> userList.setCurrency(userId, "USD");
-            case "RUR" -> userList.setCurrency(userId, "RUR");
+            case "currencies" -> inlineKeyboardMarkupMy.menuCurrency(userId, true, messageId, userList.getUserSettings(userId).getCurrencies());
+            case "EUR" -> {
+                if (userList.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand() == "EUR").count() > 0
+                        && userList.getUserSettings(userId).getCurrencies().size() > 1) {
+                    userList.unSetCurrency(userId, "EUR");
+                } else {
+                    userList.setCurrency(userId, "EUR");
+                }
+                inlineKeyboardMarkupMy.menuCurrency(userId, true, messageId, userList.getUserSettings(userId).getCurrencies());
+            }
+            case "USD" -> {
+                if (userList.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand() == "USD").count() > 0
+                        && userList.getUserSettings(userId).getCurrencies().size() > 1) {
+                    userList.unSetCurrency(userId, "USD");
+                } else {
+                    userList.setCurrency(userId, "USD");
+                }
+                inlineKeyboardMarkupMy.menuCurrency(userId, true, messageId, userList.getUserSettings(userId).getCurrencies());
+            }
+            case "RUR" -> {
+                if (userList.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand() == "RUR").count() > 0
+                        && userList.getUserSettings(userId).getCurrencies().size() > 1) {
+                    userList.unSetCurrency(userId, "RUR");
+                } else {
+                    userList.setCurrency(userId, "RUR");
+                }
+                inlineKeyboardMarkupMy.menuCurrency(userId, true, messageId, userList.getUserSettings(userId).getCurrencies());
+            }
             case "BackVal" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
             case "Time_of_notification" -> replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString());
         }
