@@ -16,6 +16,8 @@ import utils.user.UserSettings;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -243,8 +245,10 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 
         final HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
         System.out.println(currencies.toString());
-
-
+        final int roundAccuracy=userSettings.getRoundAccuracy();
+        System.out.println(roundAccuracy);
+        int notifyHour = userSettings.getNotifyHour();
+        System.out.println(notifyHour);
         StringBuilder result = new StringBuilder();
 
         for (Banks banks : bankList) {
@@ -258,7 +262,7 @@ result.append("Курс в: "+banks.getCommand()+"\n");
 
 
                 for (BankResponce responce : collect) {
-                    result.append( responce.getCurrency() + " Покупка: " + responce.getBuy()+" Продажа:"  + responce.getSale() + "\n");
+                    result.append( responce.getCurrency() + " Покупка: " + getPosle(responce.getBuy(),roundAccuracy)+" Продажа:"  + getPosle(responce.getSale(),roundAccuracy) + "\n");
                 }
                 System.out.println(collect);
             }
@@ -266,5 +270,11 @@ result.append("Курс в: "+banks.getCommand()+"\n");
         }
 
         return result.toString();
+    }
+    private BigDecimal getPosle(float t,int roundAccuracy){
+
+        BigDecimal value = new BigDecimal(Float.toString(t));
+        BigDecimal bigDecimal = value.setScale(roundAccuracy, RoundingMode.DOWN);
+        return bigDecimal;
     }
 }

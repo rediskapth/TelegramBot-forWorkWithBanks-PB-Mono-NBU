@@ -31,10 +31,19 @@ public class NbuAPI {
                 bankResponce.setBank("NBU");
                 bankResponce.setBuy(NBU.getRate());
                 bankResponce.setSale(NBU.getRate());
-                bankResponce.setCurrency(NBU.getCc());
+                bankResponce.setCurrency(getCurrencyNameByName(NBU.getCc()));
                 responses.add(bankResponce);
             }
         }
         return responses;
     }
+    private String  getCurrencyNameByName(String Cc){
+        return switch (Cc) {
+            case "USD" -> "USD";
+            case "EUR" -> "EUR";
+            case "RUB" -> "RUR";
+            default -> null;
+        };
+    }
+
 }
