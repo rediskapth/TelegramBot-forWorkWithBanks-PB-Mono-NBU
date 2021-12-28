@@ -1,23 +1,27 @@
 package utils.keyboards;
 
 
+import api.bank.Banks;
+import api.bank.CurrencyNames;
 import api.controller.TelegramImplementations;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class InlineKeyboardMarkupMy extends TelegramImplementations {
-    public void mainMenu(String chatUserId) {
+    public void mainMenu(String userId) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Получить информацию")
-                    .callbackData("Get")
+                    .text("Получить инфо")
+                    .callbackData("GetInfo")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Настройки")
@@ -26,7 +30,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             executeAsync(
                     SendMessage.builder()
                             .text("Привет. Этот бот поможет отслеживать актуальные курсы валют.")
-                            .chatId(chatUserId)
+                            .chatId(userId)
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
         } catch (TelegramApiException e) {
@@ -52,7 +56,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
                     .callbackData("currencies")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Время оповещений.")
+                    .text("Время оповещений")
                     .callbackData("Time_of_notification")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
@@ -71,97 +75,127 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
         }
     }
 
-    public void menuNumber(String chatUserId) {
+    public void menuNumber(Long userId, boolean isUpdate, int messageId, int accuracy) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Два знака")
-                    .callbackData("2")
+                    .text(accuracy==2?"✅  2":"2")
+                    .callbackData("accuracy:2")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Три знака")
-                    .callbackData("3")
+                    .text(accuracy==3?"✅  3":"3")
+                    .callbackData("accuracy:3")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Четыре знака")
-                    .callbackData("4")
+                    .text(accuracy==4?"✅  4":"4")
+                    .callbackData("accuracy:4")
                     .build())));
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Назад")
                     .callbackData("BackNum")
                     .build())));
-
-            executeAsync(
-                    SendMessage.builder()
-                            .chatId(chatUserId)
-                            .text("Кол-во знаков после запятой.")
-                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
-                            .build());
+            if (isUpdate) {
+                executeAsync(
+                        EditMessageReplyMarkup.builder()
+                                .chatId(userId.toString())
+                                .messageId(messageId)
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            } else {
+                executeAsync(
+                        SendMessage.builder()
+                                .chatId(userId.toString())
+                                .text("Кол-во знаков после запятой")
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            }
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
-    public void menuBanks(String chatUserId) {
+    public void menuCurrency(Long userId, boolean isUpdate, int messageId, HashSet<CurrencyNames> checkedCurrencies) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Приват банк")
-                    .callbackData("Privat")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("НБУ")
-                    .callbackData("NBU")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Моно банк")
-                    .callbackData("Mono")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Назад")
-                    .callbackData("BackB")
-                    .build())));
-
-            executeAsync(
-                    SendMessage.builder()
-                            .chatId(chatUserId)
-                            .text("Банк")
-                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
-                            .build());
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void menuCurrency(String chatUserId) {
-        try {
-            List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Доллар")
-                    .callbackData("USA")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Евро")
-                    .callbackData("EUR")
-                    .build())));
-            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
-                    .text("Рубль")
-                    .callbackData("RUB")
-                    .build())));
+            for (CurrencyNames currencyNames : CurrencyNames.values()) {
+                String checked = "";
+                for (CurrencyNames cur : checkedCurrencies) {
+                    if (currencyNames.getName().equals(cur.getName())) {
+                        checked = "✅  ";
+                        break;
+                    } else {
+                        checked = "";
+                    }
+                }
+                buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                        .text(checked + currencyNames.getName())
+                        .callbackData(currencyNames.getCommand())
+                        .build())));
+            }
             buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
                     .text("Назад")
                     .callbackData("BackVal")
                     .build())));
-
-            executeAsync(
-                    SendMessage.builder()
-                            .chatId(chatUserId)
-                            .text("Валюта")
-                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
-                            .build());
+            if (isUpdate) {
+                executeAsync(
+                        EditMessageReplyMarkup.builder()
+                                .chatId(userId.toString())
+                                .messageId(messageId)
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            } else {
+                executeAsync(
+                        SendMessage.builder()
+                                .chatId(userId.toString())
+                                .text("Валюта")
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            }
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
+
+    public void menuBanks(Long userId, boolean isUpdate, int messageId, HashSet<Banks> checkedBanks) {
+        try {
+            List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+            for (Banks banks : Banks.values()) {
+                String checked = "";
+                for (Banks cur : checkedBanks) {
+                    if (banks.getName() == cur.getName()) {
+                        checked = "✅  ";
+                        break;
+                    } else {
+                        checked = "";
+                    }
+                }
+                buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                        .text(checked + banks.getName())
+                        .callbackData(banks.getCommand())
+                        .build())));
+            }
+            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                    .text("Назад")
+                    .callbackData("BackB")
+                    .build())));
+            if (isUpdate) {
+                executeAsync(
+                        EditMessageReplyMarkup.builder()
+                                .chatId(userId.toString())
+                                .messageId(messageId)
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            } else {
+                executeAsync(
+                        SendMessage.builder()
+                                .chatId(userId.toString())
+                                .text("Банки")
+                                .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                                .build());
+            }
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 }
