@@ -84,7 +84,20 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             if (text.equals("/start")) {
                 inlineKeyboardMarkupMy.mainMenu(chatUserId);
             } else if (update.getMessage().getText().matches(".+:00") || update.getMessage().getText().equals("Выключить уведомления")) {
+                int hour;
+                if (update.getMessage().getText().matches(".+:00")) {
+                    hour = Integer.parseInt(update.getMessage()
+                            .getText()
+                            .replaceAll(":00", "")
+                            .replaceAll("✅", "")
+                            .trim());
+                } else {
+                    hour = -1;
+                }
+//                System.out.println(hour);
+              userService.setNotify(Long.parseLong(chatUserId),hour);
                 inlineKeyboardMarkupMy.menuSettings(chatUserId);
+
                 ReplyKeyboardRemove keyboardMarkup = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
                 try {
                     executeAsync(
@@ -233,7 +246,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 inlineKeyboardMarkupMy.menuSettings(userId.toString());
                 break;
             }
-            case "Time_of_notification" -> {replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString());
+            case "Time_of_notification" -> {replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString(),userService.getUserSettings(userId));
                 break;}
         }
     }
@@ -248,7 +261,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
         final int roundAccuracy=userSettings.getRoundAccuracy();
         System.out.println(roundAccuracy);
         int notifyHour = userSettings.getNotifyHour();
-        System.out.println(notifyHour);
+//        System.out.println(notifyHour);
         StringBuilder result = new StringBuilder();
 
         for (Banks banks : bankList) {
@@ -262,7 +275,11 @@ result.append("Курс в: "+banks.getCommand()+"\n");
 
 
                 for (BankResponce responce : collect) {
-                    result.append( responce.getCurrency() + " Покупка: " + getPosle(responce.getBuy(),roundAccuracy)+" Продажа:"  + getPosle(responce.getSale(),roundAccuracy) + "\n");
+
+                    BigDecimal buy = new BigDecimal(Float.toString(responce.getBuy())).setScale(roundAccuracy, RoundingMode.DOWN);
+                    BigDecimal sale = new BigDecimal(Float.toString(responce.getSale())).setScale(roundAccuracy, RoundingMode.DOWN);
+
+                    result.append( responce.getCurrency() + " Покупка: " + buy+" Продажа:"  + sale + "\n");
                 }
                 System.out.println(collect);
             }
@@ -271,10 +288,5 @@ result.append("Курс в: "+banks.getCommand()+"\n");
 
         return result.toString();
     }
-    private BigDecimal getPosle(float t,int roundAccuracy){
 
-        BigDecimal value = new BigDecimal(Float.toString(t));
-        BigDecimal bigDecimal = value.setScale(roundAccuracy, RoundingMode.DOWN);
-        return bigDecimal;
-    }
 }

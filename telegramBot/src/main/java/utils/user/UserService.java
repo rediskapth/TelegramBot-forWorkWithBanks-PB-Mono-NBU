@@ -3,12 +3,15 @@ package utils.user;
 import api.bank.Banks;
 import api.bank.CurrencyNames;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -41,7 +44,7 @@ public class UserService {
         HashSet<Banks> banks = userSettings.getBankList();
         banks.add(Banks.valueOf(bank));
         userMap.replace(userId, userSettings);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
 
     //Удаляем банк из настройки пользователя
@@ -50,7 +53,7 @@ public class UserService {
         HashSet<Banks> banks = userSettings.getBankList();
         banks.remove(Banks.valueOf(bank));
         userMap.replace(userId, userSettings);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
 
     //Записываем валюту в настройки пользователя, если ее нет, то добавляется/если есть то не дублируется
@@ -60,7 +63,7 @@ public class UserService {
         currencies.add(CurrencyNames.valueOf(currency));
         userSettings.setCurrencies(currencies);
         userMap.replace(userId, userSettings);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
 
     //Удаляем валюту из настроек пользователя
@@ -70,7 +73,7 @@ public class UserService {
         currencies.remove(CurrencyNames.valueOf(currency));
         userSettings.setCurrencies(currencies);
         userMap.replace(userId, userSettings);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
 
     //Записываем кол-во знаков после запятой в пользователя
@@ -78,15 +81,18 @@ public class UserService {
         UserSettings userSettings = userMap.get(userId);
         userSettings.setRoundAccuracy(accuracy);
         userMap.put(userId, userSettings);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
 
     //Записываем время оповещения 0- не оповещать
     public void setNotify(Long userId, int notifyHour) {
         userMap.get(userId).setNotifyHour(notifyHour);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
-
+public int getNotify(Long userId){
+    System.out.println(userId);
+    return   userMap.get(userId).getNotifyHour();
+}
 
     //Get element of Map with user settings
     public UserSettings getUserSettings(Long userId) {
@@ -101,7 +107,7 @@ public class UserService {
     public void setUserSettings(Long userId, UserSettings userSettings) {
         UserSettings userSettings1 = new UserSettings(userSettings.getName(),userSettings.getBankList(),userSettings.getCurrencies(),userSettings.getRoundAccuracy(),userSettings.getNotifyHour());
         userMap.put(userId, userSettings1);
-        saveUsersToFile();
+//        saveUsersToFile();
     }
 
     private void readUsersFromFile() {
@@ -117,14 +123,14 @@ public class UserService {
         }
     }
 
-    public void saveUsersToFile() {
-        Gson json = new GsonBuilder().setPrettyPrinting().create();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(userMap, writer);
-        } catch (IOException e) {
-            System.out.println("SaverError: "+e.getMessage());
-        }
-    }
+//    public void saveUsersToFile() {
+//        Gson json = new GsonBuilder().setPrettyPrinting().create();
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+//            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//            gson.toJson(userMap, writer);
+//        } catch (IOException e) {
+//            System.out.println("SaverError: "+e.getMessage());
+//        }
+//    }
 }
 
