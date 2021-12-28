@@ -120,7 +120,7 @@ public class InlineKeyboardMarkupMy extends TelegramImplementations {
             for (CurrencyNames currencyNames : CurrencyNames.values()) {
                 String checked = "";
                 for (CurrencyNames cur : checkedCurrencies) {
-                    if (currencyNames.getName() == cur.getName()) {
+                    if (currencyNames.getName().equals(cur.getName())) {
                         checked = "✅  ";
                         break;
                     } else {

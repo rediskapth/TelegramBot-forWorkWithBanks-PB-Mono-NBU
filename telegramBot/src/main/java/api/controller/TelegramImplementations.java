@@ -1,5 +1,6 @@
 package api.controller;
 
+import api.CashingService;
 import api.Facade;
 import api.bank.BankResponce;
 import api.bank.Banks;
@@ -27,32 +28,35 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     static InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
     //   private UserService userList;// = new UserService();
     private final UserService userService;
+    Facade facade = new Facade();
 
-    String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("r.properties")).getPath();
-    Properties appProps = new Properties();
+
+//    String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("r.properties")).getPath();
+//    Properties appProps = new Properties();
 
     public TelegramImplementations() {
         userService = UserService.getInstance();
         //Facade bankResponce = new Facade;
+
     }
 
-    public String getName(String a) {
-        try {
-            appProps.load(new FileInputStream(rootPath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return appProps.getProperty(a);
-    }
+//    public String getName(String a) {
+//        try {
+//            appProps.load(new FileInputStream(rootPath));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return appProps.getProperty(a);
+//    }
 
     @Override
     public String getBotUsername() {
-        return getName("bot.username");
+        return "Telebot2021bot";
     }
 
     @Override
     public String getBotToken() {
-        return getName("bot.token");
+        return "5015821414:AAHhRmcO5vPUcrjERPkqqPrZ-oyy6CNLxw8";
     }
 
     @Override
@@ -135,9 +139,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                             .text(sendInfo(userService.getUserSettings(userId)))
                             .chatId(userId.toString())
                             .build());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -175,7 +177,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 break;
             }
             case "PRIVATBANK" -> {
-                if (userService.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand() == "PRIVATBANK").count() > 0
+                if (userService.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand().equals("PRIVATBANK")).count() > 0
                         && userService.getUserSettings(userId).getBankList().size() > 1) {
                     userService.unSetBank(userId, "PRIVATBANK");
                 } else {
@@ -195,7 +197,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 break;
             }
             case "NBU" -> {
-                if (userService.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand() == "NBU").count() > 0
+                if (userService.getUserSettings(userId).getBankList().stream().filter(e -> e.getCommand().equals("NBU")).count() > 0
                         && userService.getUserSettings(userId).getBankList().size() > 1) {
                     userService.unSetBank(userId, "NBU");
                 } else {
@@ -213,7 +215,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 break;
             }
             case "EUR" -> {
-                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand() == "EUR").count() > 0
+                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand().equals("EUR") ).count() > 0
                         && userService.getUserSettings(userId).getCurrencies().size() > 1) {
                     userService.unSetCurrency(userId, "EUR");
                 } else {
@@ -223,7 +225,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 break;
             }
             case "USD" -> {
-                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand() == "USD").count() > 0
+                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand().equals("USD")).count() > 0
                         && userService.getUserSettings(userId).getCurrencies().size() > 1) {
                     userService.unSetCurrency(userId, "USD");
                 } else {
@@ -233,7 +235,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 break;
             }
             case "RUR" -> {
-                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand() == "RUR").count() > 0
+                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand().equals("RUR")).count() > 0
                         && userService.getUserSettings(userId).getCurrencies().size() > 1) {
                     userService.unSetCurrency(userId, "RUR");
                 } else {
@@ -251,8 +253,6 @@ public class TelegramImplementations extends TelegramLongPollingBot {
         }
     }
     public String sendInfo(UserSettings userSettings) throws IOException, InterruptedException {
-        Facade facade = new Facade();
-
         final HashSet<Banks> bankList = userSettings.getBankList();
         System.out.println(bankList.toString());
 
@@ -266,7 +266,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 
         for (Banks banks : bankList) {
             List<BankResponce> bankInfo = facade.getBankInfo(banks.getName());
-result.append("Курс в: "+banks.getCommand()+"\n");
+            result.append("Курс в: "+banks.getCommand()+"\n");
 
             for (CurrencyNames currency : currencies) {
                 List<BankResponce> collect = bankInfo.stream()
