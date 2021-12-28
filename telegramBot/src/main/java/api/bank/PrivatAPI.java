@@ -31,18 +31,12 @@ public class PrivatAPI {
                 bankResponce.setBank("PrivatBank");
                 bankResponce.setBuy(pb.getBuy());
                 bankResponce.setSale(pb.getSale());
-                bankResponce.setCurrency(getCurrencyNameByName( pb.getCcy()));
+                bankResponce.setCurrency(pb.getCcy());
                 responses.add(bankResponce);
             }
         }
         return responses;
     }
-    private String  getCurrencyNameByName(String Ccy){
-        return switch (Ccy) {
-            case "USD" -> "USD";
-            case "EUR" -> "EUR";
-            case "RUR" -> "RUB";
-            default -> null;
-        };
-    }
+
+
 }

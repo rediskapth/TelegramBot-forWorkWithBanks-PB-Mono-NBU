@@ -40,7 +40,7 @@ public class MonoAPI {
         return switch (code) {
             case 840 -> "USD";
             case 978 -> "EUR";
-            case 643 -> "RUB";
+            case 643 -> "RUR";
             default -> null;
         };
     }
