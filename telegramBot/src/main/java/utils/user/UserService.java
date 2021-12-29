@@ -6,9 +6,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -18,7 +23,7 @@ public class UserService {
     private static File file = new File(USERDATA_FILE_NAME);
     private static UserService serviceInstance;
 
-    public UserService() {
+    private UserService() {
         userMap = new ConcurrentHashMap<>();
         readUsersFromFile();
     }
@@ -26,10 +31,13 @@ public class UserService {
     public static UserService getInstance() {
         if (serviceInstance == null) {
             serviceInstance = new UserService();
-
         }
         return serviceInstance;
     }
+
+    private static UserSettings defaultSettings = new UserSettings("DefUser",
+            new HashSet<>(List.of(Banks.PRIVATBANK)),
+            new HashSet<>(List.of(CurrencyNames.USD)), 2, -1);
 
    public Boolean isUserExists(Long userId) {
         try {
@@ -137,6 +145,21 @@ public class UserService {
         } catch (IOException e) {
             System.out.println("SaverError: " + e.getMessage());
         }
+    }
+
+
+//    public void saveUsersToFile() {
+//        Gson json = new GsonBuilder().setPrettyPrinting().create();
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+//            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//            gson.toJson(userMap, writer);
+//        } catch (IOException e) {
+//            System.out.println("SaverError: "+e.getMessage());
+//        }
+//    }
+
+    public Map<Long, UserSettings> getAllUserSettings() {
+        return new HashMap<>(userMap);
     }
 }
 

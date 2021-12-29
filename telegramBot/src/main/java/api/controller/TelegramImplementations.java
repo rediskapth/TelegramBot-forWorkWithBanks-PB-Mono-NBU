@@ -1,5 +1,10 @@
 package api.controller;
 
+import api.CashingService;
+import api.Facade;
+import api.bank.BankResponce;
+import api.bank.Banks;
+import api.bank.CurrencyNames;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,13 +17,18 @@ import utils.user.UserSettings;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class TelegramImplementations extends TelegramLongPollingBot {
     static ReplyKeyboardMarkupMy replyKeyboardMarkupMy = new ReplyKeyboardMarkupMy();
     static InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
+    //   private UserService userList;// = new UserService();
     private final UserService userService;
+    Facade facade = new Facade();
 
     String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("application.properties")).getPath();
     Properties appProps = new Properties();
@@ -26,25 +36,26 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     public TelegramImplementations() {
         userService = UserService.getInstance();
         //Facade bankResponce = new Facade;
+
     }
 
-    public String getName(String a) {
-        try {
-            appProps.load(new FileInputStream(rootPath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return appProps.getProperty(a);
-    }
+//    public String getName(String a) {
+//        try {
+//            appProps.load(new FileInputStream(rootPath));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return appProps.getProperty(a);
+//    }
 
     @Override
     public String getBotUsername() {
-        return getName("bot.username");
+        return "Telebot2021bot";
     }
 
     @Override
     public String getBotToken() {
-        return getName("bot.token");
+        return "5015821414:AAHhRmcO5vPUcrjERPkqqPrZ-oyy6CNLxw8";
     }
 
     @Override
@@ -74,7 +85,20 @@ public class TelegramImplementations extends TelegramLongPollingBot {
             if (text.equals("/start")) {
                 inlineKeyboardMarkupMy.mainMenu(chatUserId);
             } else if (update.getMessage().getText().matches(".+:00") || update.getMessage().getText().equals("Выключить уведомления")) {
+                int hour;
+                if (update.getMessage().getText().matches(".+:00")) {
+                    hour = Integer.parseInt(update.getMessage()
+                            .getText()
+                            .replaceAll(":00", "")
+                            .replaceAll("✅", "")
+                            .trim());
+                } else {
+                    hour = -1;
+                }
+//                System.out.println(hour);
+                userService.setNotify(Long.parseLong(chatUserId), hour);
                 inlineKeyboardMarkupMy.menuSettings(chatUserId);
+
                 ReplyKeyboardRemove keyboardMarkup = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
                 try {
                     executeAsync(
@@ -174,7 +198,45 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 }
                 inlineKeyboardMarkupMy.menuCurrency(userId, true, messageId, userService.getUserSettings(userId).getCurrenciesHashSet());
             }
-            case "Time_of_notification" -> replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString(), userService.getUserSettings(userId));
+            case "Time_of_notification" ->
+                replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString(), userService.getUserSettings(userId));
         }
     }
+
+    public String sendInfo(UserSettings userSettings) throws IOException, InterruptedException {
+        final HashSet<Banks> bankList = userSettings.getBankList();
+        System.out.println(bankList.toString());
+
+        final HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
+        System.out.println(currencies.toString());
+        final int roundAccuracy = userSettings.getRoundAccuracy();
+        System.out.println(roundAccuracy);
+        int notifyHour = userSettings.getNotifyHour();
+        System.out.println(notifyHour);
+        StringBuilder result = new StringBuilder();
+
+        for (Banks banks : bankList) {
+            List<BankResponce> bankInfo = facade.getBankInfo(banks.getName());
+            result.append("Курс в: " + banks.getCommand() + "\n");
+
+            for (CurrencyNames currency : currencies) {
+                List<BankResponce> collect = bankInfo.stream()
+                        .filter(cur -> currency.getCommand().equals(cur.getCurrency()))
+                        .collect(Collectors.toList());
+
+
+                for (BankResponce responce : collect) {
+
+                    BigDecimal buy = new BigDecimal(Float.toString(responce.getBuy())).setScale(roundAccuracy, RoundingMode.DOWN);
+                    BigDecimal sale = new BigDecimal(Float.toString(responce.getSale())).setScale(roundAccuracy, RoundingMode.DOWN);
+
+                    result.append(responce.getCurrency() + " Покупка: " + buy + " Продажа:" + sale + "\n");
+                }
+                System.out.println(collect);
+            }
+
+        }
+        return result.toString();
+    }
+
 }
