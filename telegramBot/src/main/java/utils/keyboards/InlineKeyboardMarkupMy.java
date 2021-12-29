@@ -3,7 +3,7 @@ package utils.keyboards;
 
 import api.bank.Banks;
 import api.bank.CurrencyNames;
-import api.controller.TelegramBotController;
+import api.controller.TelegramImplementations;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.*;
 
-public class InlineKeyboardMarkupMy extends TelegramBotController {
+public class InlineKeyboardMarkupMy extends TelegramImplementations {
     public void mainMenu(String userId) {
         try {
             List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
@@ -26,8 +26,8 @@ public class InlineKeyboardMarkupMy extends TelegramBotController {
                     .build())));
             executeAsync(
                     SendMessage.builder()
-                            .text("Привет. Этот бот поможет отслеживать актуальные курсы валют.")
                             .chatId(userId)
+                            .text("Привет! \n Этот бот поможет отслеживать актуальные курсы валют.")
                             .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
                             .build());
         } catch (TelegramApiException e) {
@@ -195,4 +195,27 @@ public class InlineKeyboardMarkupMy extends TelegramBotController {
             e.printStackTrace();
         }
     }
+    public void infoMenu(String userId) {
+        try {
+            List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                    .text("Получить инфо")
+                    .callbackData("GetInfo")
+                    .build())));
+            buttons.add(Collections.singletonList((InlineKeyboardButton.builder()
+                    .text("Настройки")
+                    .callbackData("Settings")
+                    .build())));
+            executeAsync(
+                    SendMessage.builder()
+                            .chatId(userId)
+                            .text("Выберите меню")
+                            .replyMarkup(InlineKeyboardMarkup.builder().keyboard(buttons).build())
+                            .build());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+
+        }
+    }
+
 }

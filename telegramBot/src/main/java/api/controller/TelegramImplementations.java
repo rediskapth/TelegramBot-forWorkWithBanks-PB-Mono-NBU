@@ -121,11 +121,18 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 
         switch (data) {
             case "Settings", "BackNum", "BackB", "BackVal" -> inlineKeyboardMarkupMy.menuSettings(userId.toString());
-            case "Back" -> inlineKeyboardMarkupMy.mainMenu(userId.toString());
-            case "GetInfo" -> execute(SendMessage.builder()
-                    .text("Some course")
-                    .chatId(userId.toString())
-                    .build());
+            case "Back" -> inlineKeyboardMarkupMy.infoMenu(userId.toString());
+            case "GetInfo" -> {
+                try {
+                    execute(SendMessage.builder()
+                            .text(sendInfo(userService.getUserSettings(userId)))
+                            .chatId(userId.toString())
+                            .build());
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                inlineKeyboardMarkupMy.infoMenu(userId.toString());
+            }
 
             case "Number" -> inlineKeyboardMarkupMy.menuNumber(userId, false, messageId, userService.getUserSettings(userId).getRoundAccuracy());
             case "accuracy:2" -> {
@@ -204,10 +211,10 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     }
 
     public String sendInfo(UserSettings userSettings) throws IOException, InterruptedException {
-        final HashSet<Banks> bankList = userSettings.getBankList();
+        final HashSet<Banks> bankList = userSettings.getBanksHashSet();
         System.out.println(bankList.toString());
 
-        final HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
+        final HashSet<CurrencyNames> currencies = userSettings.getCurrenciesHashSet();
         System.out.println(currencies.toString());
         final int roundAccuracy = userSettings.getRoundAccuracy();
         System.out.println(roundAccuracy);
