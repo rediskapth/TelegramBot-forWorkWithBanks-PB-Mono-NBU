@@ -1,5 +1,6 @@
 package api.bank.objects;
 
+
 import java.util.Objects;
 
 public class MonoObject {

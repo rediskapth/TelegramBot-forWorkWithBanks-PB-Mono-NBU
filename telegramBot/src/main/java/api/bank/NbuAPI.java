@@ -24,18 +24,26 @@ public class NbuAPI {
         HttpResponse<String> send = client.send(build, HttpResponse.BodyHandlers.ofString());
         NbuObject[] nbu = GSON.fromJson(send.body(), NbuObject[].class);
 
-            responses.clear();
+        responses.clear();
         for (NbuObject NBU : nbu) {
             if ((NBU.getCc().equals("USD")) || (NBU.getCc().equals("EUR")) || (NBU.getCc().equals("RUB"))) {
                 BankResponce bankResponce = new BankResponce();
                 bankResponce.setBank("NBU");
                 bankResponce.setBuy(NBU.getRate());
                 bankResponce.setSale(NBU.getRate());
-                bankResponce.setCurrency(NBU.getCc());
+                bankResponce.setCurrency(getCurrencyNameByName(NBU.getCc()));
                 responses.add(bankResponce);
             }
         }
         return responses;
     }
-}
+    private String  getCurrencyNameByName(String Cc){
+        return switch (Cc) {
+            case "USD" -> "USD";
+            case "EUR" -> "EUR";
+            case "RUB" -> "RUR";
+            default -> null;
+        };
+    }
 
+}
