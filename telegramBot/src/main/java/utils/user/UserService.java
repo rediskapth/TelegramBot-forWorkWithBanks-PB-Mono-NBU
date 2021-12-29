@@ -9,9 +9,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -21,13 +22,16 @@ public class UserService {
     private static File file = new File(USERDATA_FILE_NAME);
     private static UserService serviceInstance;
 
-    public UserService() {
+    private UserService() {
         userMap = new ConcurrentHashMap<>();
         readUsersFromFile();
     }
 
     public static UserService getInstance() {
-        return Objects.requireNonNullElseGet(serviceInstance, UserService::new);
+        if (serviceInstance == null) {
+            serviceInstance = new UserService();
+        }
+        return serviceInstance;
     }
 
     private static UserSettings defaultSettings = new UserSettings("DefUser",
@@ -123,6 +127,8 @@ public int getNotify(Long userId){
         }
     }
 
+
+
 //    public void saveUsersToFile() {
 //        Gson json = new GsonBuilder().setPrettyPrinting().create();
 //        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -132,5 +138,9 @@ public int getNotify(Long userId){
 //            System.out.println("SaverError: "+e.getMessage());
 //        }
 //    }
+
+    public Map<Long, UserSettings> getAllUserSettings() {
+        return new HashMap<>(userMap);
+    }
 }
 

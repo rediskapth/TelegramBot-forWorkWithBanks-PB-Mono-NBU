@@ -2,6 +2,7 @@ package utils.user;
 
 import api.bank.Banks;
 import api.bank.CurrencyNames;
+import api.controller.SendNotif;
 
 import java.util.HashSet;
 import java.util.List;
@@ -14,9 +15,8 @@ public class UserSettings {
     private int roundAccuracy;
     private int notifyHour;
 
-    public UserSettings(){
 
-    };
+    public UserSettings(){};
 
     public UserSettings(String name, HashSet<Banks> bankList, HashSet<CurrencyNames> currencies, int roundAccuracy, int notifyHour) {
         this.name = name;

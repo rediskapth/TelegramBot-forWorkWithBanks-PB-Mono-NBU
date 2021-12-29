@@ -29,15 +29,16 @@ public class TelegramImplementations extends TelegramLongPollingBot {
     //   private UserService userList;// = new UserService();
     private final UserService userService;
     Facade facade = new Facade();
+//    private static TelegramImplementations implementationsInstance;
 
 
 //    String rootPath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("r.properties")).getPath();
 //    Properties appProps = new Properties();
 
+
     public TelegramImplementations() {
         userService = UserService.getInstance();
         //Facade bankResponce = new Facade;
-
     }
 
 //    public String getName(String a) {
@@ -48,6 +49,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 //        }
 //        return appProps.getProperty(a);
 //    }
+
 
     @Override
     public String getBotUsername() {
@@ -80,6 +82,13 @@ public class TelegramImplementations extends TelegramLongPollingBot {
         }
     }
 
+//    public static TelegramImplementations getInstance() {
+//        if (implementationsInstance == null) {
+//            implementationsInstance = new TelegramImplementations();
+//        }
+//        return implementationsInstance;
+//    }
+
     private void messageHandler(Update update) {
         InlineKeyboardMarkupMy inlineKeyboardMarkupMy = new InlineKeyboardMarkupMy();
         if (update.getMessage().hasText()) {
@@ -99,7 +108,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                     hour = -1;
                 }
 //                System.out.println(hour);
-              userService.setNotify(Long.parseLong(chatUserId),hour);
+                userService.setNotify(Long.parseLong(chatUserId), hour);
                 inlineKeyboardMarkupMy.menuSettings(chatUserId);
 
                 ReplyKeyboardRemove keyboardMarkup = ReplyKeyboardRemove.builder().removeKeyboard(true).build();
@@ -215,7 +224,7 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 break;
             }
             case "EUR" -> {
-                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand().equals("EUR") ).count() > 0
+                if (userService.getUserSettings(userId).getCurrencies().stream().filter(e -> e.getCommand().equals("EUR")).count() > 0
                         && userService.getUserSettings(userId).getCurrencies().size() > 1) {
                     userService.unSetCurrency(userId, "EUR");
                 } else {
@@ -248,25 +257,28 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                 inlineKeyboardMarkupMy.menuSettings(userId.toString());
                 break;
             }
-            case "Time_of_notification" -> {replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString(),userService.getUserSettings(userId));
-                break;}
+            case "Time_of_notification" -> {
+                replyKeyboardMarkupMy.getKeyboardMarkup(userId.toString(), userService.getUserSettings(userId));
+                break;
+            }
         }
     }
+
     public String sendInfo(UserSettings userSettings) throws IOException, InterruptedException {
         final HashSet<Banks> bankList = userSettings.getBankList();
         System.out.println(bankList.toString());
 
         final HashSet<CurrencyNames> currencies = userSettings.getCurrencies();
         System.out.println(currencies.toString());
-        final int roundAccuracy=userSettings.getRoundAccuracy();
+        final int roundAccuracy = userSettings.getRoundAccuracy();
         System.out.println(roundAccuracy);
         int notifyHour = userSettings.getNotifyHour();
-//        System.out.println(notifyHour);
+        System.out.println(notifyHour);
         StringBuilder result = new StringBuilder();
 
         for (Banks banks : bankList) {
             List<BankResponce> bankInfo = facade.getBankInfo(banks.getName());
-            result.append("Курс в: "+banks.getCommand()+"\n");
+            result.append("Курс в: " + banks.getCommand() + "\n");
 
             for (CurrencyNames currency : currencies) {
                 List<BankResponce> collect = bankInfo.stream()
@@ -279,13 +291,12 @@ public class TelegramImplementations extends TelegramLongPollingBot {
                     BigDecimal buy = new BigDecimal(Float.toString(responce.getBuy())).setScale(roundAccuracy, RoundingMode.DOWN);
                     BigDecimal sale = new BigDecimal(Float.toString(responce.getSale())).setScale(roundAccuracy, RoundingMode.DOWN);
 
-                    result.append( responce.getCurrency() + " Покупка: " + buy+" Продажа:"  + sale + "\n");
+                    result.append(responce.getCurrency() + " Покупка: " + buy + " Продажа:" + sale + "\n");
                 }
                 System.out.println(collect);
             }
 
         }
-
         return result.toString();
     }
 
