@@ -53,12 +53,12 @@ public class TelegramImplementations extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "Telebot2021bot";
+        return "GoITHWBanksBot";
     }
 
     @Override
     public String getBotToken() {
-        return "5015821414:AAHhRmcO5vPUcrjERPkqqPrZ-oyy6CNLxw8";
+        return "5048454482:AAEph2zDOUDmvQFyqgSBALohUK-5eV6Ns20";
     }
 
     @Override
