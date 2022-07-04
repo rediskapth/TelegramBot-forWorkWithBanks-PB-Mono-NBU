@@ -1,8 +1,8 @@
 {
   "483177614": {
     "banksHashSet": [
-      "PRIVATBANK",
-      "NBU"
+      "NBU",
+      "PRIVATBANK"
     ],
     "currenciesHashSet": [
       "RUR",
@@ -14,6 +14,8 @@
   "392688915": {
     "name": "AleksakhinAnton",
     "banksHashSet": [
+      "NBU",
+      "MONOBANK",
       "PRIVATBANK"
     ],
     "currenciesHashSet": [
@@ -25,14 +27,14 @@
   "635448472": {
     "name": "SkyOgnie",
     "banksHashSet": [
-      "PRIVATBANK",
+      "NBU",
       "MONOBANK",
-      "NBU"
+      "PRIVATBANK"
     ],
     "currenciesHashSet": [
       "RUR",
-      "USD",
-      "EUR"
+      "EUR",
+      "USD"
     ],
     "roundAccuracy": 2,
     "notifyHour": 17
@@ -40,14 +42,14 @@
   "765380855": {
     "name": "ternet1978",
     "banksHashSet": [
-      "PRIVATBANK",
+      "NBU",
       "MONOBANK",
-      "NBU"
+      "PRIVATBANK"
     ],
     "currenciesHashSet": [
       "RUR",
-      "USD",
-      "EUR"
+      "EUR",
+      "USD"
     ],
     "roundAccuracy": 3,
     "notifyHour": 13
@@ -59,8 +61,8 @@
     ],
     "currenciesHashSet": [
       "RUR",
-      "USD",
-      "EUR"
+      "EUR",
+      "USD"
     ],
     "roundAccuracy": 2,
     "notifyHour": 17
@@ -68,9 +70,9 @@
   "530943899": {
     "name": "Paultych",
     "banksHashSet": [
-      "PRIVATBANK",
+      "NBU",
       "MONOBANK",
-      "NBU"
+      "PRIVATBANK"
     ],
     "currenciesHashSet": [
       "USD"
@@ -81,14 +83,14 @@
   "442628654": {
     "name": "RiazanovR",
     "banksHashSet": [
-      "PRIVATBANK",
+      "NBU",
       "MONOBANK",
-      "NBU"
+      "PRIVATBANK"
     ],
     "currenciesHashSet": [
       "RUR",
-      "USD",
-      "EUR"
+      "EUR",
+      "USD"
     ],
     "roundAccuracy": 3,
     "notifyHour": 13
